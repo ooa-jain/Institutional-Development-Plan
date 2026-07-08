@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}All Enablers — IDP{% endblock %}
+
+{% block styles %}
+<style>
+  /* small page-specific tweaks */
+  .toggle-btn { cursor: pointer; }
+  .section-card { transition: all .18s ease; }
+  .section-card:hover { transform: translateY(-6px); box-shadow: 0 14px 40px rgba(15,23,42,0.08); }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="p-6 max-w-7xl mx-auto space-y-6">
+
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-blue-900 mb-2">Institutional Development Plan – Enablers (A to H)</h1>
+      <p class="text-sm text-gray-600">Click a section to expand the committee members and roles.</p>
+    </div>
+
+    
+  </div>
+
+  <!-- Repeatable section component -->
+  {% macro enabler_section(id, title, rows) %}
+  <section class="bg-white shadow-md rounded-xl p-6 section-card" id="section-{{ id }}">
+    <div class="flex justify-between items-center toggle-btn" onclick="toggleContent('{{ id }}')">
+      <h3 class="text-2xl font-semibold text-blue-800">{{ title }}</h3>
+      <i id="chev-{{ id }}" class="fas fa-chevron-down"></i>
+    </div>
+    <div id="content-{{ id }}" class="hidden mt-4">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="text-left px-4 py-2">Name &amp; Designation</th>
+            <th class="text-left px-4 py-2">Position</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in rows %}
+            <tr>
+              <td class="px-4 py-2">{{ r[0] }}</td>
+              <td class="px-4 py-2">{{ r[1] }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  {% endmacro %}
+
+  {# Provide data inline — you can also pass these via view context instead #}
+  {% set a_rows = [
+    ["Dr. Easwaran Iyer, Advisor, Chancellor’s Advisory Board", "Chairperson"],
+    ["Dr. Asha Rajiv, Director, IQAC", "Convenor"],
+    ["Dr. J. Letha, Pro Vice-Chancellor", "Member"],
+    ["Ms. Aparna Prasad, Director, Office of Communications and Human Resources", "Member"],
+    ["Mr. M.S. Parswanath, Director, Projects and Facilities, JGI", "Member"],
+    ["Mr. Ravindra Bhandary, Vice President, JGI", "Advisor"]
+] %}
+
+  {% set b_rows = [
+    ["Mr. Ravindra Bhandary, Vice President, JGI", "Chairperson"],
+    ["Mr. M.S. Santhosh, Joint Registrar", "Convenor"],
+    ["Dr. N V H Krishnan, Advisor, Chancellor’s Advisory Board", "Member"],
+    ["Ms. Aparna Prasad, Director, Office of Communications and Human Resources", "Member"],
+    ["Mr. M.S. Parswanath, Director, Projects and Facilities, JGI", "Member"]
+] %}
+
+ {% set c_rows = [
+    ["Dr. Shradha Kanwar, Chief Academic Officer", "Chairperson"],
+    ["Dr. S Kiran, Deputy Dean, Academics", "Convenor"],
+    ["Dr. Sridhara Murthi K R, Advisor, Chancellor’s Advisory Board", "Member"],
+    ["Dr. Srividya Shivakumar, Director, School of Allied Healthcare and Sciences", "Member"],
+    ["Dr. Sagar Gulati, Director, School of CS and IT", "Member"],
+    ["Dr. Simmy Kurian, Deputy Director, CMS B-School, Off-Campus, Kochi", "Member"],
+    ["Dr. Neelima M, Deputy Director (In-Charge), School of Commerce", "Member"],
+    ["Dr. Beemkumar N, Professor, Mechanical Engineering, FET", "Member"]
+] %}
+
+
+  {% set d_rows = [
+    ["Dr. Varalakshmi K N, Director Research (Sciences), CRPAS, JAIN (Deemed-to-be University)", "Chairperson"],
+    ["Dr. Jitendra K Mishra, Vice Chancellor (In Charge) and Registrar", "Convenor"],
+    ["Dr. Manav Saxena, Head, CREI", "Member"],
+    ["Dr. Geetha Balakrishna, Director, Centre for Nano and Materials Science (CNMS)", "Member"],
+    ["Dr. Chetan Nag K S, Deputy Director, Centre for Urban Ecology, Bio-Diversity, Evolution and Climate Change (CUBEC)", "Member"],
+    ["Dr. Simmy Kurian, Deputy Director, CMS B-School, Off-Campus, Kochi", "Member"],
+    ["Dr. Mahavir Kurkuri, Associate Director and Professor, Centre for Research in Functional Materials (CRFM)", "Member"],
+    ["Dr. Beem Kumar, Professor, Mechanical Engineering, FET", "Member"]
+] %}
+
+
+  {% set e_rows = [
+    ["Ms. Aparna Prasad, Director, Office of Communications and Human Resources", "Chairperson"],
+    ["Ms. Roopa, Head, Human Resources", "Convenor"],
+    ["Dr. Asha Rajiv, Director of IQAC, School of Sciences", "Member"],
+    ["Dr. Shradha Kanwar, Chief Academic Officer", "Member"]
+] %}
+
+  {% set f_rows = [
+    ["Dr. Easwaran Iyer, Advisor, Chancellor’s Advisory Board", "Chairperson"],
+    ["Ms. Preeti Bhandary, Chief Manager, Placements and Corporate Relations", "Convenor"],
+    ["Mr. M.S. Santhosh, Joint Registrar", "Member"],
+    ["Dr. Deepak Sinha, Deputy Director, FET", "Member"],
+    ["Dr. Krishna Koppa, Deputy Director, CMS B-School", "Member"]
+] %}
+
+  {% set g_rows = [
+    ["Mr. Ravindra Bhandary, Vice President, JGI", "Chairperson"],
+    ["Dr. N V H Krishnan, Advisor, Chancellor’s Advisory Board", "Convenor"],
+    ["Mr. M.S. Parswanath, Director, Projects and Facilities, JGI", "Member"],
+    ["Mr. Vishal C, Director, Strategy and Development, JGI", "Member"],
+    ["Dr. Neelima M, Deputy Director (In-Charge), School of Commerce", "Member"],
+    ["Dr. J. Letha, Pro Vice-Chancellor", "Member"]
+] %}
+
+  {% set h_rows = [
+    ["Prof. N S Manjunath, Controller of Examinations", "Chairperson"],
+    ["Dr. S Kiran, Deputy Dean, Academics", "Convenor"],
+    ["Dr. Felix M. Philip, Deputy Director, School of Computer Science and IT, Off-Campus, Kochi", "Member"],
+    ["Dr. Sangeeta Devanathan, Deputy Dean, Academics", "Member"],
+    ["Dr. Sagar Gulati, Director, School of Computer Science and Information Technology", "Member"],
+    ["Mr. TSM Kumar, Director, IT", "Member"]
+] %}
+
+
+  {{ enabler_section('a', 'Enabler A: Governance Enablers', a_rows) }}
+{{ enabler_section('b', 'Enabler B: Financial Enablers and Funding Models (Resource Generation)', b_rows) }}
+{{ enabler_section('c', 'Enabler C: Academic Innovation and Excellence', c_rows) }}
+{{ enabler_section('d', 'Enabler D: Research and Intellectual Property', d_rows) }}
+{{ enabler_section('e', 'Enabler E: Human Resources and Supportive–Facilitative Enablers', e_rows) }}
+{{ enabler_section('f', 'Enabler F: Networking and Collaborations', f_rows) }}
+{{ enabler_section('g', 'Enabler G: Physical Enablers – Facilitative Enablers', g_rows) }}
+{{ enabler_section('h', 'Enabler H: Digital Transformation', h_rows) }}
+
+
+  <footer class="mt-6 text-sm text-gray-500">
+    <p>© {{ current_year if current_year is defined else '2025' }} IDP Committees Dashboard.</p>
+  </footer>
+
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function toggleContent(id) {
+    const content = document.getElementById(`content-${id}`);
+    const chev = document.getElementById(`chev-${id}`);
+    if (!content) return;
+    content.classList.toggle('hidden');
+    if (chev) {
+      chev.classList.toggle('fa-rotate-180');
+    }
+  }
+
+  // Optional: close all on load except A
+  document.addEventListener('DOMContentLoaded', () => {
+    // leave all collapsed by default (the template shows hidden class)
+  });
+</script>
+{% endblock %}

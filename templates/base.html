@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{% block title %}JAIN — IDP{% endblock %}</title>
+
+  <!-- Tailwind CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --brand: #0b1220;
+      --muted: #64748b;
+      --accent: #ff8c00;
+      --nav-bg: rgba(255,255,255,0.85);
+      --glass: rgba(255,255,255,0.6);
+      --shadow-strong: 0 8px 32px rgba(15,23,42,0.12);
+    }
+
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background: radial-gradient(circle at center, #f8fbff, #e9f0fb);
+      color: var(--brand);
+    }
+
+    /* ========== TOP BAR (LOGO + NAV + HAMBURGER) ========== */
+    .topbar {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(1200px, calc(100% - 36px));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 20px;
+      border-radius: 999px;
+      z-index: 1600;
+      transition: all 0.28s ease;
+      backdrop-filter: blur(8px);
+      background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.75));
+      box-shadow: var(--shadow-strong);
+      pointer-events: auto;
+    }
+
+    /* compact state when scrolled */
+    .topbar.scrolled {
+      top: 8px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.95);
+      box-shadow: 0 10px 30px rgba(11,19,30,0.12);
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* logo */
+    .base-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+    .base-logo img { height:42px; width:auto; display:block; transition:height .2s ease; }
+    .topbar.scrolled .base-logo img { height:34px; }
+
+    /* center nav */
+    .base-nav {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 8px;
+      pointer-events: auto;
+      flex: 1 1 auto;
+    }
+
+    .base-nav a {
+      text-decoration: none;
+      color: var(--brand);
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 999px;
+      transition: all 0.18s ease;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .base-nav a:hover {
+      background: linear-gradient(135deg, var(--accent), #ffa500);
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    /* right area (hamburger or extra buttons) */
+    .top-actions { display:flex; align-items:center; gap:12px; }
+
+    /* hamburger (mobile) */
+    .hamburger-btn {
+      display:none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 10px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(15,23,42,0.12);
+      border: none;
+      transition: all .2s ease;
+      align-items:center;
+    }
+    .hamburger-btn span {
+      width: 26px;
+      height: 3px;
+      background: var(--brand);
+      border-radius: 3px;
+      transition: all 0.25s ease;
+      display:block;
+    }
+    .hamburger-btn.active span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+    .hamburger-btn.active span:nth-child(2) { opacity: 0; transform: translateX(-6px); }
+    .hamburger-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
+
+    /* mobile overlay nav - hidden by default; will be displayed on small screens via media query */
+    .mobile-nav-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 18, 32, 0.9);
+      z-index: 1700;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.28s ease;
+      overflow-y: auto;
+    }
+    .mobile-nav-overlay.active { opacity: 1; visibility: visible; }
+    .mobile-nav-content { padding: 110px 24px 32px; max-width: 520px; margin: 0 auto; }
+    .mobile-nav-overlay a {
+      display:block; text-decoration:none; color:white; font-weight:700; font-size:18px;
+      padding:14px 18px; margin-bottom:10px; border-radius:10px; background: rgba(255,255,255,0.04);
+      transition: all .18s ease;
+      text-align:center;
+    }
+    .mobile-nav-overlay a:hover { transform: translateX(8px); background: linear-gradient(135deg, var(--accent), #ffa500); }
+
+    /* content offset so main doesn't hide under topbar */
+    .content-offset { padding-top: 120px; }
+
+    /* responsive behavior */
+    @media (max-width: 1024px) {
+      .topbar { width: min(1000px, calc(100% - 28px)); }
+      .base-nav a { padding: 8px 12px; font-size:13px; }
+    }
+
+    @media (max-width: 768px) {
+      .base-nav { display:none; }           /* hide center nav on mobile */
+      .hamburger-btn { display:flex; }     /* show hamburger */
+      .base-logo img { height:36px; }
+      .content-offset { padding-top: 96px; }
+
+      /* ensure overlay nav is available on mobile */
+      .mobile-nav-overlay { display: block; }
+    }
+
+    @media (max-width: 480px) {
+      .topbar { left: 50%; transform: translateX(-50%); padding: 10px; }
+      .base-logo img { height:32px; }
+      .content-offset { padding-top: 80px; }
+      .mobile-nav-content { padding-top: 90px; }
+    }
+
+    /* focus states for accessibility */
+    .base-nav a:focus, .hamburger-btn:focus, .mobile-nav-overlay a:focus {
+      outline: 3px solid rgba(255,140,0,0.18);
+      outline-offset: 3px;
+      border-radius: 8px;
+    }
+  </style>
+
+  {% block styles %}{% endblock %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style id="uiv2">
+/* ================= UI v2 — same brand, elevated ================= */
+:root{ --v2-navy:#0b1220; --v2-ink:#0f172a; --v2-muted:#5b6b82; --v2-orange:#ff8c00; --v2-orange2:#ffa733; --v2-card:#ffffff; }
+
+body{ font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif !important; }
+h1,h2,h3,h4,.title,.section-title,.panel-title,.main-title-section h1{ font-family:'Manrope','Inter',system-ui,sans-serif !important; letter-spacing:-0.02em; }
+
+/* Ambient mesh background */
+body::before{
+  content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
+  background:
+    radial-gradient(600px 420px at 8% 4%, rgba(255,140,0,0.10), transparent 60%),
+    radial-gradient(700px 500px at 95% 12%, rgba(37,99,235,0.10), transparent 60%),
+    radial-gradient(800px 600px at 50% 110%, rgba(255,140,0,0.07), transparent 60%);
+}
+body::after{
+  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.5;
+  background-image:linear-gradient(rgba(11,18,32,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(11,18,32,.045) 1px,transparent 1px);
+  background-size:44px 44px;
+  -webkit-mask-image:radial-gradient(ellipse 90% 65% at 50% 0%, #000 30%, transparent 75%);
+          mask-image:radial-gradient(ellipse 90% 65% at 50% 0%, #000 30%, transparent 75%);
+}
+
+/* Scroll progress */
+#v2-progress{ position:fixed; top:0; left:0; height:3px; width:0%;
+  background:linear-gradient(90deg,var(--v2-orange),var(--v2-orange2)); z-index:4000;
+  box-shadow:0 0 12px rgba(255,140,0,.55); transition:width .1s linear; }
+
+/* Cards & panels: orange hairline reveal */
+.card,.panel,.goal-card,.summary-card,.glass-card{ position:relative; overflow:hidden; border:1px solid rgba(11,18,32,.06) !important; }
+.card::before,.panel::before,.goal-card::before,.summary-card::before{
+  content:""; position:absolute; top:0; left:0; right:0; height:3px;
+  background:linear-gradient(90deg,var(--v2-orange),var(--v2-orange2));
+  transform:scaleX(0); transform-origin:left; transition:transform .35s ease; }
+.card:hover::before,.panel:hover::before,.goal-card:hover::before,.summary-card:hover::before{ transform:scaleX(1); }
+.panel,.summary-card{ border-radius:16px; }
+.panel:hover,.summary-card:hover{ transform:translateY(-4px); box-shadow:0 18px 44px rgba(15,23,42,.13); }
+
+/* Tables: navy header, zebra rows */
+table thead th, table thead td{ background:var(--v2-navy) !important; color:#fff !important; font-weight:700; letter-spacing:.02em; }
+table thead th:first-child{ border-top-left-radius:10px; } table thead th:last-child{ border-top-right-radius:10px; }
+table tbody tr:nth-child(even){ background:rgba(11,18,32,.028); }
+table tbody tr{ transition:background .18s ease; }
+table tbody tr:hover{ background:rgba(255,140,0,.08); }
+td,th{ border-color:rgba(11,18,32,.08) !important; }
+
+/* Eyebrow chip */
+.v2-eyebrow{ display:inline-flex; align-items:center; gap:8px; padding:8px 16px; border-radius:999px;
+  background:rgba(255,140,0,.10); border:1px solid rgba(255,140,0,.35); color:#9a5600;
+  font-weight:700; font-size:12.5px; letter-spacing:.14em; text-transform:uppercase; }
+.v2-eyebrow::before{ content:""; width:8px; height:8px; border-radius:50%; background:var(--v2-orange);
+  box-shadow:0 0 0 4px rgba(255,140,0,.18); }
+
+/* Stat strip */
+.v2-stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin:8px auto 70px; max-width:1120px; }
+.v2-stat{ background:rgba(255,255,255,.85); backdrop-filter:blur(8px); border:1px solid rgba(11,18,32,.07);
+  border-radius:18px; padding:26px 18px; text-align:center; box-shadow:0 10px 28px rgba(15,23,42,.07);
+  position:relative; overflow:hidden; transition:transform .3s ease, box-shadow .3s ease; }
+.v2-stat:hover{ transform:translateY(-5px); box-shadow:0 18px 42px rgba(15,23,42,.12); }
+.v2-stat::after{ content:""; position:absolute; inset:auto 0 0 0; height:3px;
+  background:linear-gradient(90deg,var(--v2-orange),var(--v2-orange2)); }
+.v2-stat .num{ font-family:'Manrope',sans-serif; font-weight:800; font-size:40px; color:var(--v2-ink); line-height:1; }
+.v2-stat .num span{ color:var(--v2-orange); }
+.v2-stat .lbl{ margin-top:8px; font-size:13px; font-weight:600; color:var(--v2-muted); letter-spacing:.06em; text-transform:uppercase; }
+
+/* Enabler quick-links */
+.v2-quick{ max-width:1120px; margin:0 auto 80px; }
+.v2-quick-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+.v2-chip{ display:flex; align-items:center; gap:14px; padding:16px 18px; border-radius:14px;
+  background:rgba(255,255,255,.9); border:1px solid rgba(11,18,32,.07); text-decoration:none;
+  box-shadow:0 6px 18px rgba(15,23,42,.06); transition:all .25s ease; }
+.v2-chip:hover{ transform:translateY(-4px); border-color:rgba(255,140,0,.5); box-shadow:0 14px 32px rgba(255,140,0,.16); }
+.v2-chip .ltr{ flex:0 0 42px; height:42px; border-radius:12px; display:grid; place-items:center;
+  font-family:'Manrope',sans-serif; font-weight:800; font-size:18px; color:#fff;
+  background:linear-gradient(135deg,var(--v2-navy),#1e293b); }
+.v2-chip:hover .ltr{ background:linear-gradient(135deg,var(--v2-orange),var(--v2-orange2)); }
+.v2-chip .txt{ font-size:13.5px; font-weight:600; color:var(--v2-ink); line-height:1.35; }
+.v2-chip .txt small{ display:block; color:var(--v2-muted); font-weight:500; font-size:11.5px; margin-top:2px; }
+
+/* Footer */
+.v2-footer{ margin-top:90px; background:var(--v2-navy); color:#cbd5e1; position:relative; }
+.v2-footer::before{ content:""; position:absolute; top:0; left:0; right:0; height:4px;
+  background:linear-gradient(90deg,var(--v2-orange),var(--v2-orange2),var(--v2-orange)); }
+.v2-footer .wrap{ max-width:1160px; margin:0 auto; padding:56px 24px 26px; display:grid;
+  grid-template-columns:1.4fr 1fr 1fr; gap:44px; }
+.v2-footer h4{ color:#fff; font-family:'Manrope',sans-serif; font-size:15px; letter-spacing:.08em;
+  text-transform:uppercase; margin:0 0 16px; }
+.v2-footer .brand{ font-family:'Manrope',sans-serif; font-weight:800; font-size:22px; color:#fff; margin-bottom:12px; }
+.v2-footer .brand span{ color:var(--v2-orange); }
+.v2-footer p{ font-size:13.5px; line-height:1.7; color:#94a3b8; max-width:380px; margin:0; }
+.v2-footer a{ display:block; color:#cbd5e1; text-decoration:none; font-size:13.5px; padding:5px 0; transition:all .18s ease; }
+.v2-footer a:hover{ color:var(--v2-orange); transform:translateX(4px); }
+.v2-footer .bottom{ border-top:1px solid rgba(255,255,255,.09); margin-top:14px; padding:18px 24px;
+  text-align:center; font-size:12.5px; color:#7c8aa0; }
+
+/* Back to top */
+#v2-top{ position:fixed; right:22px; bottom:22px; width:46px; height:46px; border-radius:50%;
+  border:none; cursor:pointer; z-index:3000; display:grid; place-items:center;
+  background:linear-gradient(135deg,var(--v2-orange),var(--v2-orange2)); color:#fff; font-size:20px;
+  box-shadow:0 10px 26px rgba(255,140,0,.4); opacity:0; visibility:hidden; transform:translateY(12px);
+  transition:all .3s ease; }
+#v2-top.show{ opacity:1; visibility:visible; transform:translateY(0); }
+#v2-top:hover{ transform:translateY(-3px); }
+
+/* Scroll reveal */
+.v2-reveal{ opacity:0; transform:translateY(26px); transition:opacity .6s ease, transform .6s ease; }
+.v2-reveal.in{ opacity:1; transform:none; }
+
+@media (prefers-reduced-motion: reduce){
+  .v2-reveal{ opacity:1 !important; transform:none !important; transition:none !important; }
+  *{ animation-duration:.01ms !important; }
+}
+@media (max-width:1024px){ .v2-stats{ grid-template-columns:repeat(2,1fr); } .v2-quick-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:768px){ .v2-footer .wrap{ grid-template-columns:1fr; gap:30px; } }
+@media (max-width:520px){ .v2-stats{ grid-template-columns:repeat(2,1fr); gap:12px; } .v2-stat .num{ font-size:30px; } .v2-quick-grid{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+  <!-- TOP BAR: logo + nav + hamburger -->
+  <header class="topbar" id="topbar" role="banner" aria-label="Primary topbar">
+    <!-- left: logo -->
+    <a class="base-logo" href="{{ url_for('dashboard') }}" aria-label="Jain dashboard">
+      <img src="{{ url_for('static', filename='images/jainl.png') }}" alt="JAIN Logo">
+    </a>
+
+    <!-- center: nav (desktop) -->
+    <nav class="base-nav" role="navigation" aria-label="Primary navigation">
+      <a href="{{ url_for('dashboard') }}">Home</a>
+      <a href="{{ url_for('Roadmap') }}">Roadmap</a>
+      
+      <a href="{{ url_for('enablersA') }}">A</a>
+      <a href="{{ url_for('enablersb') }}">B</a>
+      <a href="{{ url_for('enablersc') }}">C</a>
+      <a href="{{ url_for('enablersd') }}">D</a>
+      <a href="{{ url_for('enablerse') }}">E</a>
+      <a href="{{ url_for('enablersf') }}">F</a>
+      <a href="{{ url_for('enablersg') }}">G</a>
+      <a href="{{ url_for('enablersh') }}">H</a>
+      <a href="{{ url_for('overview') }}">Overview</a>
+    </nav>
+
+    <!-- right: actions (hamburger for mobile) -->
+    <div class="top-actions">
+      <button id="hamburgerBtn" class="hamburger-btn" aria-expanded="false" aria-controls="mobileNav" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MOBILE NAV OVERLAY -->
+  <div id="mobileNav" class="mobile-nav-overlay" aria-hidden="true">
+    <div class="mobile-nav-content" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+      <nav role="navigation" aria-label="Mobile navigation list">
+        <a href="{{ url_for('dashboard') }}">Home</a>
+        <a href="/Roadmap" onclick="closeMenu()">Roadmap</a>
+         <a href="{{ url_for('Roadmap') }}">Roadmap</a>
+        <a href="{{ url_for('overview') }}">Overview</a>
+        <a href="{{ url_for('enablersA') }}">Enabler A</a>
+        <a href="{{ url_for('enablersb') }}">Enabler B</a>
+        <a href="{{ url_for('enablersc') }}">Enabler C</a>
+        <a href="{{ url_for('enablersd') }}">Enabler D</a>
+        <a href="{{ url_for('enablerse') }}">Enabler E</a>
+        <a href="{{ url_for('enablersf') }}">Enabler F</a>
+        <a href="{{ url_for('enablersg') }}">Enabler G</a>
+        <a href="{{ url_for('enablersh') }}">Enabler H</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main class="content-offset" role="main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- SCRIPTS: sticky behavior, mobile toggle, keyboard handling -->
+  <script>
+    (function() {
+      const topbar = document.getElementById('topbar');
+      const hamburgerBtn = document.getElementById('hamburgerBtn');
+      const mobileNav = document.getElementById('mobileNav');
+
+      // Toggle mobile overlay
+      function toggleMobileNav(force) {
+        const open = typeof force === 'boolean' ? force : !mobileNav.classList.contains('active');
+        if (open) {
+          mobileNav.classList.add('active');
+          mobileNav.setAttribute('aria-hidden', 'false');
+          hamburgerBtn.classList.add('active');
+          hamburgerBtn.setAttribute('aria-expanded', 'true');
+          // prevent body scroll
+          document.documentElement.style.overflow = 'hidden';
+          document.body.style.overflow = 'hidden';
+          // set focus to first link for accessibility
+          const first = mobileNav.querySelector('a');
+          if (first) first.focus();
+        } else {
+          mobileNav.classList.remove('active');
+          mobileNav.setAttribute('aria-hidden', 'true');
+          hamburgerBtn.classList.remove('active');
+          hamburgerBtn.setAttribute('aria-expanded', 'false');
+          document.documentElement.style.overflow = '';
+          document.body.style.overflow = '';
+          hamburgerBtn.focus();
+        }
+      }
+
+      // Hamburger click
+      hamburgerBtn.addEventListener('click', () => toggleMobileNav());
+
+      // Close nav when clicking a mobile link
+      mobileNav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth <= 768) toggleMobileNav(false);
+        });
+      });
+
+      // Close on ESC
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+          toggleMobileNav(false);
+        }
+      });
+
+      // sticky / compact topbar on scroll
+      const SCROLL_THRESHOLD = 32;
+      function handleScroll() {
+        // When pageY > threshold, add compact class
+        if (window.scrollY > SCROLL_THRESHOLD) {
+          if (!topbar.classList.contains('scrolled')) topbar.classList.add('scrolled');
+        } else {
+          topbar.classList.remove('scrolled');
+        }
+      }
+
+      // Run on load + scroll
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      window.addEventListener('load', handleScroll);
+
+      // If user navigates via hash (so content may be scrolled), ensure topbar updates
+      window.addEventListener('hashchange', handleScroll);
+
+      // Accessibility: trap focus in mobile dialog while open (simple)
+      mobileNav.addEventListener('keydown', function(e) {
+        if (e.key !== 'Tab') return;
+        const focusable = mobileNav.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])');
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      });
+
+      // If viewport resizes to desktop, ensure mobile overlay closed
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && mobileNav.classList.contains('active')) {
+          toggleMobileNav(false);
+        }
+      });
+    })();
+  </script>
+
+  {% block scripts %}{% endblock %}
+<footer class="v2-footer">
+  <div class="wrap">
+    <div>
+      <div class="brand">JAIN <span>IDP</span> 2024–2039</div>
+      <p>Institutional Development Plan of JAIN (Deemed-to-be University) — a phased roadmap for academic excellence, research, digital transformation and governance, aligned with NEP 2020.</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="/">Home</a>
+      <a href="/overview">Overview</a>
+      <a href="/enablers">Committees</a>
+      <a href="/Roadmap">Roadmap</a>
+    </div>
+    <div>
+      <h4>Enablers</h4>
+      <a href="/enablersA">A · Governance</a>
+      <a href="/enablersb">B · Financial Sustainability</a>
+      <a href="/enablersc">C · Academic Innovation</a>
+      <a href="/enablersd">D · Research &amp; IP</a>
+      <a href="/enablerse">E · Human Resources</a>
+      <a href="/enablersf">F · Networking &amp; Collaboration</a>
+      <a href="/enablersg">G · Physical Infrastructure</a>
+      <a href="/enablersh">H · Digital Transformation</a>
+    </div>
+  </div>
+  <div class="bottom">© 2026 JAIN (Deemed-to-be University) · Office of Academic Affairs · Institutional Development Plan</div>
+</footer>
+<div id="v2-progress"></div>
+<button id="v2-top" aria-label="Back to top">↑</button>
+<script id="uiv2js">
+(function(){
+  var bar=document.getElementById('v2-progress'), topBtn=document.getElementById('v2-top');
+  function onScroll(){
+    var h=document.documentElement, sc=h.scrollTop||document.body.scrollTop,
+        max=h.scrollHeight-h.clientHeight;
+    bar.style.width=(max>0?(sc/max*100):0)+'%';
+    topBtn.classList.toggle('show', sc>420);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+  topBtn.addEventListener('click', function(){ window.scrollTo({top:0, behavior:'smooth'}); });
+
+  // Scroll reveal
+  var targets=document.querySelectorAll('.card,.panel,.goal-card,.summary-card,.v2-stat,.v2-chip,.timeline > *,.section-title,.hero-text,.hero-img,table');
+  targets.forEach(function(el){ el.classList.add('v2-reveal'); });
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e,i){ if(e.isIntersecting){ e.target.style.transitionDelay=Math.min((i%6)*70,350)+'ms'; e.target.classList.add('in'); io.unobserve(e.target);} });
+    },{threshold:0.08});
+    targets.forEach(function(el){ io.observe(el); });
+  } else { targets.forEach(function(el){ el.classList.add('in'); }); }
+
+  // Animated counters
+  var nums=document.querySelectorAll('.v2-stat .num[data-count]');
+  if(nums.length && 'IntersectionObserver' in window){
+    var cio=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(!e.isIntersecting) return; cio.unobserve(e.target);
+        var el=e.target, end=parseInt(el.dataset.count,10), suf=el.dataset.suffix||'', t0=null;
+        function step(ts){ if(!t0)t0=ts; var p=Math.min((ts-t0)/1200,1); p=1-Math.pow(1-p,3);
+          el.innerHTML=Math.round(end*p)+'<span>'+suf+'</span>'; if(p<1)requestAnimationFrame(step); }
+        requestAnimationFrame(step);
+      });
+    },{threshold:0.4});
+    nums.forEach(function(n){ cio.observe(n); });
+  }
+})();
+</script>
+</body>
+</html>

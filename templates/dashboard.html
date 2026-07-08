@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>IDP – Principal Committee</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root{
+    --brand:#0b1220;
+    --muted:#64748b;
+    --accent:#ff8c00;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: radial-gradient(circle at center, #f8fbff, #e9f0fb);
+    color:var(--brand);
+  }
+
+  /* ========== TOP LOGO ROW ========== */
+  .top-bar {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    max-width: 1320px;
+    z-index: 1200;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    padding:10px 20px;
+    pointer-events: none;
+  }
+  .top-bar .logo {
+    pointer-events: all;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .logo-mark { height:42px; width:auto; display:block; }
+
+  /* ========== ROUNDED NAV BAR ========== */
+  .nav-row {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1150;
+    pointer-events: none;
+  }
+  nav.nav {
+    pointer-events: all;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:12px 28px;
+    border-radius:50px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(15,23,42,0.12);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+  }
+  .nav-links {
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+  .nav-links a {
+    text-decoration:none;
+    color:#0f172a;
+    font-weight:600;
+    font-size:14px;
+    padding:10px 20px;
+    border-radius:50px;
+    transition: all .2s ease;
+    white-space: nowrap;
+  }
+  .nav-links a:hover {
+    background: linear-gradient(135deg, #ff8c00, #ffa500);
+    color:white;
+    transform: translateY(-2px);
+  }
+
+  /* ========== HAMBURGER MENU ========== */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 8px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(15,23,42,0.1);
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1300;
+    pointer-events: all;
+  }
+
+  .hamburger span {
+    width: 25px;
+    height: 3px;
+    background: #0f172a;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+  }
+
+  .hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+  }
+
+  .hamburger.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+  }
+
+  /* ========== PAGE ========== */
+  .page {
+    max-width:1200px;
+    margin:0 auto;
+    padding:180px 22px 60px;
+  }
+
+  /* ========== CENTERED TITLE SECTION ========== */
+  .main-title-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 60px;
+    position: relative;
+  }
+
+  .main-title-section h1 {
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1.2;
+    background: linear-gradient(135deg, #351d01 0%, #351d01 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: center;
+    max-width: 90%;
+    letter-spacing: -0.5px;
+    position: relative;
+    padding-bottom: 15px;
+  }
+
+  .main-title-section h1::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #ff8c00, transparent);
+    border-radius: 2px;
+  }
+
+  /* ========== HERO SECTION ========== */
+  .hero {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:50px;
+    align-items:center;
+    position:relative;
+    margin-bottom: 80px;
+  }
+
+  .hero-text h2 {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #0f172a;
+    margin-bottom: 20px;
+  }
+
+  .hero-text p {
+    font-size:16px;
+    line-height: 1.7;
+    color:var(--muted);
+    max-width:540px;
+  }
+
+  .hero-img {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+  }
+  .hero-img img {
+    max-width:520px;
+    width:100%;
+    height:auto;
+    display:block;
+  }
+
+  /* ========== SECTION TITLE ========== */
+  .section-title {
+    margin-top:60px;
+    margin-bottom: 50px;
+    text-align:center;
+    font-size:32px;
+    font-weight:800;
+    color:#0f172a;
+    position:relative;
+    padding-bottom: 20px;
+  }
+  .section-title::after{
+    content:"";
+    width:90px;
+    height:5px;
+    background:var(--accent);
+    border-radius:3px;
+    position:absolute;
+    bottom:0;
+    left:50%;
+    transform:translateX(-50%);
+  }
+
+  /* ========== CARDS ========== */
+  .card-grid {
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:24px;
+    max-width:1120px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  .card {
+    height:220px;
+    border-radius:16px;
+    background:white;
+    box-shadow:0 8px 24px rgba(15,23,42,0.08);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:20px 14px;
+    text-align:center;
+    transition: all .3s ease;
+    position: relative;
+    perspective: 1000px;
+    cursor: pointer;
+  }
+
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow:0 16px 40px rgba(15,23,42,0.12);
+  }
+
+  .card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card.flipped .card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 14px;
+  }
+
+  
+  .card-back {
+    transform: rotateY(180deg);
+    background: linear-gradient(135deg, #011a3a 0%);
+    border-radius: 16px;
+    color: white;
+  }
+
+  .name { 
+    font-weight:700; 
+    font-size:15px; 
+    color:#0f172a;
+    margin-bottom: 6px;
+  }
+  .designation { 
+    font-size:13px; 
+    color:#64748b;
+    margin-bottom: 12px;
+  }
+  .role { 
+    font-weight:700; 
+    color:#0b63ff;
+    font-size: 14px;
+  }
+
+  .card-back .name,
+  .card-back .designation,
+  .card-back .role {
+    color: white;
+  }
+
+  .card-back .role {
+    background: rgba(255,255,255,0.2);
+    padding: 8px 16px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+  }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width:1000px){
+    .hero { 
+      grid-template-columns:1fr; 
+      text-align:center;
+      gap: 40px;
+    }
+    .hero-text h2 {
+      font-size: 36px;
+    }
+    .hero-text p {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .nav-links {
+      gap: 4px;
+    }
+    .nav-links a {
+      padding: 8px 16px;
+      font-size: 13px;
+    }
+    .main-title-section h1 { 
+      font-size: 32px;
+    }
+    .card-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  @media (max-width:700px){
+    .hamburger {
+      display: flex;
+    }
+
+    .nav-row {
+      top: 0;
+      left: 0;
+      right: 0;
+      transform: none;
+      height: 100vh;
+      width: 100%;
+      background: rgba(11, 18, 32, 0.95);
+      backdrop-filter: blur(20px);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .nav-row.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    nav.nav {
+      height: 100%;
+      width: 100%;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      border: none;
+      padding: 100px 20px;
+    }
+
+    .nav-links {
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+    }
+
+    .nav-links a {
+      width: 100%;
+      padding: 18px 30px;
+      font-size: 18px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-links a:hover {
+      background: linear-gradient(135deg, #ff8c00, #ffa500);
+      transform: translateX(10px);
+    }
+
+    .card-grid { 
+      grid-template-columns:repeat(2,1fr);
+      gap: 18px;
+    }
+    .top-bar { 
+      top:15px;
+      padding: 8px 16px;
+    }
+    .logo-mark { 
+      height: 36px;
+    }
+    .hero-text h2 {
+      font-size: 32px;
+    }
+    .main-title-section h1 { 
+      font-size: 28px;
+    }
+    .page {
+      padding: 150px 18px 50px;
+    }
+    .hero {
+      margin-bottom: 60px;
+      gap: 30px;
+    }
+    .card {
+      height: 200px;
+      padding: 16px 12px;
+    }
+    .name {
+      font-size: 14px;
+    }
+    .designation {
+      font-size: 12px;
+    }
+    .role {
+      font-size: 13px;
+    }
+  }
+  
+  @media (max-width:520px){
+    .card-grid { 
+      grid-template-columns:1fr;
+      max-width: 320px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-text h2 {
+      font-size: 28px;
+    }
+    .main-title-section {
+      margin-bottom: 40px;
+    }
+    .main-title-section h1 { 
+      font-size: 24px;
+    }
+    .page {
+      padding: 140px 16px 40px;
+    }
+    .card {
+      height: 180px;
+    }
+    .section-title {
+      font-size: 26px;
+      margin-top: 40px;
+      margin-bottom: 30px;
+    }
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style id="uiv2">
+/* ================= UI v2 — same brand, elevated ================= */
+:root{ --v2-navy:#0b1220; --v2-ink:#0f172a; --v2-muted:#5b6b82; --v2-orange:#ff8c00; --v2-orange2:#ffa733; --v2-card:#ffffff; }
+
+body{ font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif !important; }
+h1,h2,h3,h4,.title,.section-title,.panel-title,.main-title-section h1{ font-family:'Manrope','Inter',system-ui,sans-serif !important; letter-spacing:-0.02em; }
+
+/* Ambient mesh background */
+body::before{
+  content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
+  background:
+    radial-gradient(600px 420px at 8% 4%, rgba(255,140,0,0.10), transparent 60%),
+    radial-gradient(700px 500px at 95% 12%, rgba(37,99,235,0.10), transparent 60%),
+    radial-gradient(800px 600px at 50% 110%, rgba(255,140,0,0.07), transparent 60%);
+}
+body::after{
+  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.5;
+  background-image:linear-gradient(rgba(11,18,32,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(11,18,32,.045) 1px,transparent 1px);
+  background-size:44px 44px;
+  -webkit-mask-image:radial-gradient(ellipse 90% 65% at 50% 0%, #000 30%, transparent 75%);
+          mask-image:radial-gradient(ellipse 90% 65% at 50% 0%, #000 30%, transparent 75%);
+}
+
+/* Scroll progress */
+#v2-progress{ position:fixed; top:0; left:0; height:3px; width:0%;
+  background:linear-gradient(90deg,var(--v2-orange),var(--v2-orange2)); z-index:4000;
+  box-shadow:0 0 12px rgba(255,140,0,.55); transition:width .1s linear; }
+
+/* Cards & panels: orange hairline reveal */
+.card,.panel,.goal-card,.summary-card,.glass-card{ position:relative; overflow:hidden; border:1px solid rgba(11,18,32,.06) !important; }
+.card::before,.panel::before,.goal-card::before,.summary-card::before{
+  content:""; position:absolute; top:0; left:0; right:0; height:3px;
+  background:linear-gradient(90deg,var(--v2-orange),var(--v2-orange2));
+  transform:scaleX(0); transform-origin:left; transition:transform .35s ease; }
+.card:hover::before,.panel:hover::before,.goal-card:hover::before,.summary-card:hover::before{ transform:scaleX(1); }
+.panel,.summary-card{ border-radius:16px; }
+.panel:hover,.summary-card:hover{ transform:translateY(-4px); box-shadow:0 18px 44px rgba(15,23,42,.13); }
+
+/* Tables: navy header, zebra rows */
+table thead th, table thead td{ background:var(--v2-navy) !important; color:#fff !important; font-weight:700; letter-spacing:.02em; }
+table thead th:first-child{ border-top-left-radius:10px; } table thead th:last-child{ border-top-right-radius:10px; }
+table tbody tr:nth-child(even){ background:rgba(11,18,32,.028); }
+table tbody tr{ transition:background .18s ease; }
+table tbody tr:hover{ background:rgba(255,140,0,.08); }
+td,th{ border-color:rgba(11,18,32,.08) !important; }
+
+/* Eyebrow chip */
+.v2-eyebrow{ display:inline-flex; align-items:center; gap:8px; padding:8px 16px; border-radius:999px;
+  background:rgba(255,140,0,.10); border:1px solid rgba(255,140,0,.35); color:#9a5600;
+  font-weight:700; font-size:12.5px; letter-spacing:.14em; text-transform:uppercase; }
+.v2-eyebrow::before{ content:""; width:8px; height:8px; border-radius:50%; background:var(--v2-orange);
+  box-shadow:0 0 0 4px rgba(255,140,0,.18); }
+
+/* Stat strip */
+.v2-stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin:8px auto 70px; max-width:1120px; }
+.v2-stat{ background:rgba(255,255,255,.85); backdrop-filter:blur(8px); border:1px solid rgba(11,18,32,.07);
+  border-radius:18px; padding:26px 18px; text-align:center; box-shadow:0 10px 28px rgba(15,23,42,.07);
+  position:relative; overflow:hidden; transition:transform .3s ease, box-shadow .3s ease; }
+.v2-stat:hover{ transform:translateY(-5px); box-shadow:0 18px 42px rgba(15,23,42,.12); }
+.v2-stat::after{ content:""; position:absolute; inset:auto 0 0 0; height:3px;
+  background:linear-gradient(90deg,var(--v2-orange),var(--v2-orange2)); }
+.v2-stat .num{ font-family:'Manrope',sans-serif; font-weight:800; font-size:40px; color:var(--v2-ink); line-height:1; }
+.v2-stat .num span{ color:var(--v2-orange); }
+.v2-stat .lbl{ margin-top:8px; font-size:13px; font-weight:600; color:var(--v2-muted); letter-spacing:.06em; text-transform:uppercase; }
+
+/* Enabler quick-links */
+.v2-quick{ max-width:1120px; margin:0 auto 80px; }
+.v2-quick-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+.v2-chip{ display:flex; align-items:center; gap:14px; padding:16px 18px; border-radius:14px;
+  background:rgba(255,255,255,.9); border:1px solid rgba(11,18,32,.07); text-decoration:none;
+  box-shadow:0 6px 18px rgba(15,23,42,.06); transition:all .25s ease; }
+.v2-chip:hover{ transform:translateY(-4px); border-color:rgba(255,140,0,.5); box-shadow:0 14px 32px rgba(255,140,0,.16); }
+.v2-chip .ltr{ flex:0 0 42px; height:42px; border-radius:12px; display:grid; place-items:center;
+  font-family:'Manrope',sans-serif; font-weight:800; font-size:18px; color:#fff;
+  background:linear-gradient(135deg,var(--v2-navy),#1e293b); }
+.v2-chip:hover .ltr{ background:linear-gradient(135deg,var(--v2-orange),var(--v2-orange2)); }
+.v2-chip .txt{ font-size:13.5px; font-weight:600; color:var(--v2-ink); line-height:1.35; }
+.v2-chip .txt small{ display:block; color:var(--v2-muted); font-weight:500; font-size:11.5px; margin-top:2px; }
+
+/* Footer */
+.v2-footer{ margin-top:90px; background:var(--v2-navy); color:#cbd5e1; position:relative; }
+.v2-footer::before{ content:""; position:absolute; top:0; left:0; right:0; height:4px;
+  background:linear-gradient(90deg,var(--v2-orange),var(--v2-orange2),var(--v2-orange)); }
+.v2-footer .wrap{ max-width:1160px; margin:0 auto; padding:56px 24px 26px; display:grid;
+  grid-template-columns:1.4fr 1fr 1fr; gap:44px; }
+.v2-footer h4{ color:#fff; font-family:'Manrope',sans-serif; font-size:15px; letter-spacing:.08em;
+  text-transform:uppercase; margin:0 0 16px; }
+.v2-footer .brand{ font-family:'Manrope',sans-serif; font-weight:800; font-size:22px; color:#fff; margin-bottom:12px; }
+.v2-footer .brand span{ color:var(--v2-orange); }
+.v2-footer p{ font-size:13.5px; line-height:1.7; color:#94a3b8; max-width:380px; margin:0; }
+.v2-footer a{ display:block; color:#cbd5e1; text-decoration:none; font-size:13.5px; padding:5px 0; transition:all .18s ease; }
+.v2-footer a:hover{ color:var(--v2-orange); transform:translateX(4px); }
+.v2-footer .bottom{ border-top:1px solid rgba(255,255,255,.09); margin-top:14px; padding:18px 24px;
+  text-align:center; font-size:12.5px; color:#7c8aa0; }
+
+/* Back to top */
+#v2-top{ position:fixed; right:22px; bottom:22px; width:46px; height:46px; border-radius:50%;
+  border:none; cursor:pointer; z-index:3000; display:grid; place-items:center;
+  background:linear-gradient(135deg,var(--v2-orange),var(--v2-orange2)); color:#fff; font-size:20px;
+  box-shadow:0 10px 26px rgba(255,140,0,.4); opacity:0; visibility:hidden; transform:translateY(12px);
+  transition:all .3s ease; }
+#v2-top.show{ opacity:1; visibility:visible; transform:translateY(0); }
+#v2-top:hover{ transform:translateY(-3px); }
+
+/* Scroll reveal */
+.v2-reveal{ opacity:0; transform:translateY(26px); transition:opacity .6s ease, transform .6s ease; }
+.v2-reveal.in{ opacity:1; transform:none; }
+
+@media (prefers-reduced-motion: reduce){
+  .v2-reveal{ opacity:1 !important; transform:none !important; transition:none !important; }
+  *{ animation-duration:.01ms !important; }
+}
+@media (max-width:1024px){ .v2-stats{ grid-template-columns:repeat(2,1fr); } .v2-quick-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:768px){ .v2-footer .wrap{ grid-template-columns:1fr; gap:30px; } }
+@media (max-width:520px){ .v2-stats{ grid-template-columns:repeat(2,1fr); gap:12px; } .v2-stat .num{ font-size:30px; } .v2-quick-grid{ grid-template-columns:1fr; } }
+</style>
+<style id='uiv2fix'>.card-grid{grid-template-columns:repeat(auto-fit,minmax(200px,1fr)) !important; max-width:960px !important;}</style>
+</head>
+<body>
+
+  <!-- TOP LOGO ROW -->
+  <div class="top-bar">
+    <div class="logo">
+      <img src="/static/images/jainl.png" class="logo-mark" alt="JAIN Logo">
+    </div>
+  </div>
+
+  <!-- HAMBURGER MENU -->
+  <div class="hamburger" onclick="toggleMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <!-- ROUNDED NAV BAR -->
+  <div class="nav-row" id="navMenu">
+    <nav class="nav" role="navigation" aria-label="main navigation">
+      <div class="nav-links"> 
+        <a href="#principal" onclick="closeMenu()">Principal Committee</a>
+        <a href="/enablers" onclick="closeMenu()">Enablers</a>
+        <a href="/Roadmap" onclick="closeMenu()">Roadmap</a>
+      </div>
+    </nav>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      const hamburger = document.querySelector('.hamburger');
+      const navMenu = document.getElementById('navMenu');
+      hamburger.classList.toggle('active');
+      navMenu.classList.toggle('active');
+    }
+
+    function closeMenu() {
+      const hamburger = document.querySelector('.hamburger');
+      const navMenu = document.getElementById('navMenu');
+      hamburger.classList.remove('active');
+      navMenu.classList.remove('active');
+    }
+  </script>
+
+  <!-- PAGE CONTENT -->
+  <div class="page">
+
+    <!-- CENTERED MAIN TITLE -->
+    <div style="display:flex;justify-content:center;margin-bottom:18px;">
+      <span class="v2-eyebrow">JAIN (Deemed-to-be University) · 2024–2039</span>
+    </div>
+    <div class="main-title-section">
+      <h1>Institutional Development Plan (IDP)</h1>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero">
+      <!-- left column: intro text -->
+      <div class="hero-text">
+        <h2>Goal Progress Overview</h2>
+        <p>
+          The Institutional Development Plan (IDP) of JAIN (Deemed-to-be University) delineates a
+          comprehensive roadmap for academic and institutional excellence through a phased
+          progression approach. It underscores strategic governance, financial sustainability,
+          academic innovation, and digital transformation aligned with NEP 2020.
+        </p>
+      </div>
+
+      <!-- right column: image -->
+      <div class="hero-img">
+        <img src="/static/images/1.png" alt="Team Illustration">
+      </div>
+    </div>
+
+<!-- STAT STRIP -->
+    <div class="v2-stats">
+      <div class="v2-stat"><div class="num" data-count="8">0</div><div class="lbl">Strategic Enablers</div></div>
+      <div class="v2-stat"><div class="num" data-count="15" data-suffix="-yr">0</div><div class="lbl">Vision Horizon</div></div>
+      <div class="v2-stat"><div class="num" data-count="3">0</div><div class="lbl">Growth Phases</div></div>
+      <div class="v2-stat"><div class="num">NEP<span>&nbsp;2020</span></div><div class="lbl">Fully Aligned</div></div>
+    </div>
+
+    <!-- SECTION TITLE -->
+    <div id="principal" class="section-title">Principal Coordination Committee</div>
+
+    <!-- CARDS -->
+    <div class="card-grid">
+      <script>
+        const data = [
+          ["Dr. Chenraj Roychand", "Chancellor", "Chairperson"],
+          ["Dr. N. Sundararajan", "Pro Chancellor", "Vice Chairperson"],
+          ["Dr. Jitendra Kumar Mishra", "Vice Chancellor (In Charge) and Registrar", "Member"],
+          ["Dr. Shradha Kanwar", "Chief Academic Officer", "Member"]
+        ];
+
+        const cardGrid = document.querySelector('.card-grid');
+        let flippedCard = null;
+
+        data.forEach((d, index) => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <div class="card-inner">
+              <div class="card-front">
+                <div class="name">${d[0]}</div>
+                <div class="designation">${d[1]}</div>
+                <div class="role">${d[2]}</div>
+              </div>
+              <div class="card-back">
+                <div class="name">${d[0]}</div>
+                <div class="designation">${d[1]}</div>
+                <div class="role">${d[2]}</div>
+              </div>
+            </div>
+          `;
+          
+          card.addEventListener('click', () => {
+            if (flippedCard && flippedCard !== card) {
+              flippedCard.classList.remove('flipped');
+            }
+            card.classList.toggle('flipped');
+            flippedCard = card.classList.contains('flipped') ? card : null;
+          });
+
+          cardGrid.appendChild(card);
+        });
+
+        // Scroll animation - flip cards one by one
+        let currentIndex = 0;
+        let scrollTimeout;
+
+        window.addEventListener('wheel', (e) => {
+          clearTimeout(scrollTimeout);
+          
+          scrollTimeout = setTimeout(() => {
+            const cards = document.querySelectorAll('.card');
+            
+            if (e.deltaY > 0) {
+              // Scrolling down - flip next card
+              if (currentIndex < cards.length) {
+                cards[currentIndex].classList.add('flipped');
+                currentIndex++;
+              }
+            } else {
+              // Scrolling up - unflip previous card
+              if (currentIndex > 0) {
+                currentIndex--;
+                cards[currentIndex].classList.remove('flipped');
+              }
+            }
+          }, 50);
+        });
+      </script>
+    </div>
+
+  </div>
+
+<!-- ENABLER QUICK ACCESS -->
+    <div class="v2-quick">
+      <div class="section-title">Explore the Eight Enablers</div>
+      <div class="v2-quick-grid">
+        <a class="v2-chip" href="/enablersA"><div class="ltr">A</div><div class="txt">Governance<small>Leadership &amp; institutional structure</small></div></a>
+        <a class="v2-chip" href="/enablersb"><div class="ltr">B</div><div class="txt">Financial Sustainability<small>Funding models &amp; resource generation</small></div></a>
+        <a class="v2-chip" href="/enablersc"><div class="ltr">C</div><div class="txt">Academic Innovation<small>Excellence in teaching &amp; learning</small></div></a>
+        <a class="v2-chip" href="/enablersd"><div class="ltr">D</div><div class="txt">Research &amp; IP<small>Intellectual property &amp; innovation</small></div></a>
+        <a class="v2-chip" href="/enablerse"><div class="ltr">E</div><div class="txt">Human Resources<small>Supportive &amp; facilitative systems</small></div></a>
+        <a class="v2-chip" href="/enablersf"><div class="ltr">F</div><div class="txt">Networking &amp; Collaboration<small>Partnerships &amp; community</small></div></a>
+        <a class="v2-chip" href="/enablersg"><div class="ltr">G</div><div class="txt">Physical Infrastructure<small>Campus &amp; facilitative enablers</small></div></a>
+        <a class="v2-chip" href="/enablersh"><div class="ltr">H</div><div class="txt">Digital Transformation<small>Technology-driven ecosystem</small></div></a>
+      </div>
+    </div>
+
+<footer class="v2-footer">
+  <div class="wrap">
+    <div>
+      <div class="brand">JAIN <span>IDP</span> 2024–2039</div>
+      <p>Institutional Development Plan of JAIN (Deemed-to-be University) — a phased roadmap for academic excellence, research, digital transformation and governance, aligned with NEP 2020.</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="/">Home</a>
+      <a href="/overview">Overview</a>
+      <a href="/enablers">Committees</a>
+      <a href="/Roadmap">Roadmap</a>
+    </div>
+    <div>
+      <h4>Enablers</h4>
+      <a href="/enablersA">A · Governance</a>
+      <a href="/enablersb">B · Financial Sustainability</a>
+      <a href="/enablersc">C · Academic Innovation</a>
+      <a href="/enablersd">D · Research &amp; IP</a>
+      <a href="/enablerse">E · Human Resources</a>
+      <a href="/enablersf">F · Networking &amp; Collaboration</a>
+      <a href="/enablersg">G · Physical Infrastructure</a>
+      <a href="/enablersh">H · Digital Transformation</a>
+    </div>
+  </div>
+  <div class="bottom">© 2026 JAIN (Deemed-to-be University) · Office of Academic Affairs · Institutional Development Plan</div>
+</footer>
+<div id="v2-progress"></div>
+<button id="v2-top" aria-label="Back to top">↑</button>
+<script id="uiv2js">
+(function(){
+  var bar=document.getElementById('v2-progress'), topBtn=document.getElementById('v2-top');
+  function onScroll(){
+    var h=document.documentElement, sc=h.scrollTop||document.body.scrollTop,
+        max=h.scrollHeight-h.clientHeight;
+    bar.style.width=(max>0?(sc/max*100):0)+'%';
+    topBtn.classList.toggle('show', sc>420);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+  topBtn.addEventListener('click', function(){ window.scrollTo({top:0, behavior:'smooth'}); });
+
+  // Scroll reveal
+  var targets=document.querySelectorAll('.card,.panel,.goal-card,.summary-card,.v2-stat,.v2-chip,.timeline > *,.section-title,.hero-text,.hero-img,table');
+  targets.forEach(function(el){ el.classList.add('v2-reveal'); });
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e,i){ if(e.isIntersecting){ e.target.style.transitionDelay=Math.min((i%6)*70,350)+'ms'; e.target.classList.add('in'); io.unobserve(e.target);} });
+    },{threshold:0.08});
+    targets.forEach(function(el){ io.observe(el); });
+  } else { targets.forEach(function(el){ el.classList.add('in'); }); }
+
+  // Animated counters
+  var nums=document.querySelectorAll('.v2-stat .num[data-count]');
+  if(nums.length && 'IntersectionObserver' in window){
+    var cio=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(!e.isIntersecting) return; cio.unobserve(e.target);
+        var el=e.target, end=parseInt(el.dataset.count,10), suf=el.dataset.suffix||'', t0=null;
+        function step(ts){ if(!t0)t0=ts; var p=Math.min((ts-t0)/1200,1); p=1-Math.pow(1-p,3);
+          el.innerHTML=Math.round(end*p)+'<span>'+suf+'</span>'; if(p<1)requestAnimationFrame(step); }
+        requestAnimationFrame(step);
+      });
+    },{threshold:0.4});
+    nums.forEach(function(n){ cio.observe(n); });
+  }
+})();
+</script>
+</body>
+</html>

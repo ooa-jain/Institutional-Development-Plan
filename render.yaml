@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: idp-dashboard
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --timeout 120
+    envVars:
+      - key: MONGO_URI
+
+        value: mongodb+srv://santoshkamal:San_2006@cluster0.yoeuyut.mongodb.net/idp?retryWrites=true&w=majority&appName=Cluster0
