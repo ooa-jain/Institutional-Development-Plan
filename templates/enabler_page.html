@@ -1,339 +1,299 @@
 {% extends "base.html" %}
+{% import "_icons.html" as ui %}
 
 {% block title %}{{ meta.title }} — IDP{% endblock %}
 
 {% block styles %}
 <style>
-  :root{
-    --bg-page: #f3f8fd;
-    --hero-bg: linear-gradient(180deg,#ffffff,#f7fbff);
-    --muted:#64748b;
-    --accent:#ff8c00;
-    --accent2:#ffa733;
-    --navy:#0b1220;
-    --card-shadow: 0 20px 40px rgba(16,24,40,0.06);
-  }
+  .ep-wrap{ max-width:1240px; margin:0 auto; padding:0 clamp(16px,3vw,26px); }
 
-  .ep-wrap { max-width:1400px; margin:20px auto 60px; padding:0 20px; }
+  /* ---------------- breadcrumb ---------------- */
+  .ep-crumb{ display:flex; align-items:center; gap:10px; margin:16px 0 12px; flex-wrap:wrap; }
+  .ep-crumb a{
+    display:inline-flex; align-items:center; gap:7px; text-decoration:none;
+    padding:6px 13px; border-radius:999px; background:rgba(11,18,32,.05);
+    color:var(--v2-ink); font-weight:700; font-size:12.5px; transition:all .18s ease;
+  }
+  .ep-crumb a:hover{ background:rgba(255,140,0,.14); color:var(--v2-orange-ink); }
+  .ep-crumb .sep{ color:var(--v2-muted); font-size:12px; }
+  .ep-crumb .here{ font-size:12.5px; font-weight:700; color:var(--v2-muted); }
 
-  /* ===== Breadcrumb + header ===== */
-  .ep-crumb { display:flex; justify-content:center; margin-bottom:16px; }
-  .ep-crumb a {
-    display:inline-flex; align-items:center; gap:8px; text-decoration:none;
-    padding:8px 16px; border-radius:999px; background:rgba(11,18,32,.05);
-    color:var(--navy); font-weight:700; font-size:13px; transition:all .2s ease;
+  /* ---------------- hero ---------------- */
+  .ep-hero{
+    display:grid; grid-template-columns:300px 1fr; gap:28px; align-items:center;
+    background:linear-gradient(135deg,#ffffff 0%,#fbfdff 60%,#fff6ea 100%);
+    border:1px solid var(--v2-line); border-radius:20px;
+    padding:24px clamp(20px,3vw,30px); box-shadow:var(--shadow-lg);
   }
-  .ep-crumb a:hover { background:rgba(255,140,0,.12); color:#9a5600; }
+  .ep-art{ display:flex; align-items:center; justify-content:center; position:relative; }
+  .ep-art::before{
+    content:""; position:absolute; width:82%; aspect-ratio:1/1; border-radius:50%;
+    background:radial-gradient(circle,rgba(255,140,0,.15),transparent 68%);
+  }
+  .ep-art img{ position:relative; width:100%; max-width:270px; height:auto; display:block; }
+  .ep-art .fallback{
+    position:relative; width:100%; max-width:240px; aspect-ratio:1/1; border-radius:24px;
+    background:linear-gradient(135deg,var(--v2-navy) 0%,#1e3a5f 55%,var(--v2-orange) 135%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
+    overflow:hidden; box-shadow:0 16px 40px rgba(11,18,32,.26); color:#fff;
+  }
+  .ep-art .fallback .ic{ font-size:64px; stroke-width:1.4; }
+  .ep-art .fallback span{ font-family:'Manrope',sans-serif; font-weight:800; font-size:15px; }
 
-  .ep-header { text-align:center; margin-bottom:24px; padding:0 10px; }
-  .ep-header .eyebrow {
-    display:inline-flex; align-items:center; gap:8px; padding:7px 16px; border-radius:999px;
-    background:rgba(255,140,0,.10); border:1px solid rgba(255,140,0,.35); color:#9a5600;
-    font-weight:800; font-size:12px; letter-spacing:.12em; text-transform:uppercase; margin-bottom:14px;
+  .ep-copy h1{ font-size:clamp(22px,2.7vw,31px); font-weight:800; line-height:1.18; margin:12px 0 8px; color:var(--v2-ink); }
+  .ep-copy .subtitle{ color:var(--v2-muted); font-size:13.5px; margin:0 0 14px; }
+  .ep-vision{
+    background:rgba(255,140,0,.07); border:1px solid rgba(255,140,0,.28); border-left-width:4px;
+    border-radius:12px; padding:13px 16px; margin:0 0 16px;
   }
-  .ep-header .title {
-    font-size:34px; font-weight:900; margin:0 0 8px; line-height:1.2;
-    background: linear-gradient(135deg, #ff8c00, #07316a);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip:text;
-  }
-  .ep-header .subtitle { color:var(--muted); font-size:15px; margin:0; }
+  .ep-vision h2{ font-size:11.5px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; color:var(--v2-orange-ink); margin:0 0 5px; }
+  .ep-vision p{ margin:0; color:#334155; font-size:14px; line-height:1.6; }
 
-  /* ===== Vision ===== */
-  .vision {
-    text-align:center; margin:0 auto 32px; padding:24px; max-width:900px;
-    background: linear-gradient(135deg, rgba(255,140,0,0.05), rgba(255,255,255,0.8));
-    border-radius:16px; box-shadow:0 4px 16px rgba(0,0,0,0.04);
+  .ep-stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px; }
+  .ep-stat{
+    background:#fff; border:1px solid var(--v2-line); border-radius:12px; padding:11px 10px;
+    text-align:center; box-shadow:var(--shadow-sm);
   }
-  .vision h2 { font-size:20px; font-weight:800; margin:0 0 12px; color:#0b1220; }
-  .vision p { color:#334155; margin:0; font-size:16px; line-height:1.7; }
+  .ep-stat .n{ font-family:'Manrope',sans-serif; font-weight:800; font-size:23px; color:var(--v2-navy); line-height:1.1; }
+  .ep-stat .l{ margin-top:2px; font-size:10.5px; font-weight:700; color:var(--v2-muted); text-transform:uppercase; letter-spacing:.06em; }
+  .ep-cta{ display:flex; gap:10px; flex-wrap:wrap; }
 
-  /* ===== Hero panel ===== */
-  .hero-panel {
-    display:grid; grid-template-columns:440px 1fr; gap:32px;
-    background:var(--hero-bg); border-radius:24px; padding:40px;
-    box-shadow:var(--card-shadow); align-items:center; margin-bottom:8px;
+  /* ---------------- goals ---------------- */
+  .goals-section{ margin-top:30px; }
+  .goals-bar{
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px;
   }
-  .hero-left { display:flex; align-items:center; justify-content:center; }
-  .hero-left img { display:block; width:100%; max-width:420px; height:auto; object-fit:contain; }
-  .hero-icon-panel {
-    width:100%; max-width:420px; aspect-ratio:1/1; border-radius:28px;
-    background:linear-gradient(135deg,var(--navy) 0%,#1e3a5f 55%,var(--accent) 130%);
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;
-    position:relative; overflow:hidden; box-shadow:0 20px 50px rgba(11,18,32,.28);
+  .goals-bar .gb-title{ font-family:'Manrope',sans-serif; font-weight:800; font-size:20px; color:var(--v2-ink); }
+  .goals-bar .gb-sub{ font-size:12.5px; color:var(--v2-muted); margin-top:2px; }
+  .goals-tools{ display:flex; gap:9px; margin-left:auto; flex-wrap:wrap; }
+  .goals-search{ position:relative; }
+  .goals-search .ic{
+    position:absolute; left:12px; top:50%; transform:translateY(-50%);
+    color:#94a3b8; font-size:15px; pointer-events:none;
   }
-  .hero-icon-panel::before {
-    content:attr(data-letter); position:absolute; right:-10px; bottom:-40px;
-    font-family:'Manrope',sans-serif; font-weight:900; font-size:220px; line-height:1;
-    color:rgba(255,255,255,.07); pointer-events:none;
+  .goals-search input{
+    width:250px; max-width:100%; padding:10px 14px 10px 35px; border-radius:11px;
+    border:1px solid var(--v2-line); font-size:13.5px; background:#fff; font-family:inherit;
+    box-shadow:var(--shadow-sm); color:var(--v2-ink);
   }
-  .hero-icon-panel i { font-size:76px; color:#fff; filter:drop-shadow(0 8px 18px rgba(0,0,0,.25)); }
-  .hero-icon-panel .hip-label {
-    color:#fff; font-family:'Manrope',sans-serif; font-weight:800; font-size:17px;
-    letter-spacing:.04em; text-align:center; padding:0 24px;
+  .goals-search input:focus{ outline:none; border-color:var(--v2-orange); box-shadow:0 0 0 3px rgba(255,140,0,.16); }
+  .goals-toggle-btn{
+    padding:10px 15px; border-radius:11px; border:1px solid var(--v2-line); background:#fff;
+    font-weight:700; font-size:13px; color:var(--v2-ink); cursor:pointer; white-space:nowrap;
+    font-family:inherit; box-shadow:var(--shadow-sm); transition:all .18s ease;
+    display:inline-flex; align-items:center; gap:7px;
   }
+  .goals-toggle-btn:hover{ border-color:var(--v2-orange); color:var(--v2-orange-ink); }
 
-  .hero-right { display:flex; flex-direction:column; gap:22px; }
-  .hero-right h3 { font-size:20px; font-weight:800; margin:0; color:#071029; }
-
-  .ep-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-  .ep-stat {
-    background:#fff; border:1px solid rgba(11,18,32,.07); border-radius:16px; padding:18px 14px;
-    text-align:center; box-shadow:0 6px 18px rgba(15,23,42,.06);
+  .focus-accordion{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; }
+  .focus-item{
+    background:#fff; border:1px solid var(--v2-line); border-radius:14px;
+    box-shadow:var(--shadow-sm); overflow:hidden;
   }
-  .ep-stat .n { font-family:'Manrope',sans-serif; font-weight:800; font-size:26px; color:var(--navy); }
-  .ep-stat .l { margin-top:4px; font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; }
+  .focus-item-head{
+    display:flex; align-items:center; gap:12px; padding:13px 15px; cursor:pointer;
+    user-select:none; width:100%; text-align:left; background:none; border:none; font-family:inherit;
+  }
+  .focus-item-head:hover{ background:rgba(255,140,0,.05); }
+  .focus-item-head:focus-visible{ outline:3px solid rgba(255,140,0,.5); outline-offset:-3px; }
+  .fi-num{
+    flex:0 0 30px; height:30px; border-radius:9px; display:grid; place-items:center;
+    background:linear-gradient(135deg,var(--v2-navy),var(--v2-navy2)); color:#fff;
+    font-weight:800; font-size:12px; font-family:'Manrope',sans-serif;
+  }
+  .fi-title{ flex:1; font-weight:700; font-size:14px; color:var(--v2-ink); line-height:1.35; min-width:0; }
+  .fi-count{
+    flex:0 0 auto; font-size:11.5px; font-weight:700; color:var(--v2-orange-ink);
+    background:rgba(255,140,0,.11); border:1px solid rgba(255,140,0,.32); padding:3px 9px; border-radius:999px;
+  }
+  .fi-chev{ flex:0 0 auto; color:#94a3b8; font-size:15px; transition:transform .25s ease; }
+  .focus-item.open .fi-chev{ transform:rotate(180deg); color:var(--v2-orange); }
+  .focus-item.open .fi-num{ background:linear-gradient(135deg,var(--v2-orange),var(--v2-orange2)); }
 
-  .ep-cta { display:flex; gap:12px; flex-wrap:wrap; }
-  .ep-btn {
-    display:inline-flex; align-items:center; gap:8px; padding:12px 20px; border-radius:12px;
-    font-weight:700; font-size:14px; text-decoration:none; cursor:pointer; border:none;
+  .focus-item-body{ max-height:0; overflow:hidden; transition:max-height .3s ease; }
+  .focus-item.open .focus-item-body{ max-height:2600px; }
+  .focus-item-body ul{ list-style:none; margin:0; padding:0 15px 14px; }
+  .focus-item-body li{
+    display:flex; gap:9px; align-items:flex-start; padding:8px 0; font-size:13.5px; color:#374151;
+    line-height:1.55; border-top:1px dashed var(--v2-line);
+  }
+  .focus-item-body li:first-child{ border-top:none; }
+  .focus-item-body li .ic{ color:var(--v2-orange); margin-top:3px; font-size:14px; }
+
+  .focus-item.no-match{ display:none; }
+  .goals-empty{ text-align:center; color:var(--v2-muted); padding:26px; display:none; font-size:14px; }
+  .goals-empty.show{ display:block; }
+
+  /* ---------------- outcome ---------------- */
+  .ep-outcome{
+    margin-top:26px; display:flex; align-items:flex-start; gap:16px;
+    background:linear-gradient(135deg,var(--v2-navy),#16233c); color:#fff;
+    border-radius:16px; padding:20px 24px; box-shadow:var(--shadow-md);
+  }
+  .ep-outcome .oi{
+    flex:0 0 42px; height:42px; border-radius:12px; display:grid; place-items:center; font-size:20px;
+    background:rgba(255,140,0,.18); color:var(--v2-orange2);
+  }
+  .ep-outcome h3{ font-size:12px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; color:#ffcf94; margin:0 0 5px; }
+  .ep-outcome p{ margin:0; font-size:14.5px; line-height:1.6; color:#e2e8f0; }
+
+  /* ---------------- leadership ---------------- */
+  .ep-lead{ margin-top:28px; }
+  .ep-lead-wrap{
+    overflow-x:auto; background:#fff; border-radius:16px; box-shadow:var(--shadow-md);
+    border:1px solid var(--v2-line);
+  }
+  .ep-lead-wrap table{ width:100%; border-collapse:collapse; min-width:520px; }
+  .ep-lead-wrap th{ text-align:left; padding:11px 18px; font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; }
+  .ep-lead-wrap td{ padding:11px 18px; font-size:13.5px; color:var(--v2-ink); border-top:1px solid var(--v2-line); }
+  .ep-lead-wrap td:last-child{ text-align:right; white-space:nowrap; }
+
+  /* ---------------- prev / next ---------------- */
+  .ep-pagenav{ margin-top:24px; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .ep-pagenav a{
+    display:flex; align-items:center; gap:12px; background:#fff; border:1px solid var(--v2-line);
+    border-radius:14px; padding:14px 18px; text-decoration:none; box-shadow:var(--shadow-sm);
     transition:all .2s ease;
   }
-  .ep-btn.primary { background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; box-shadow:0 10px 24px rgba(255,140,0,.28); }
-  .ep-btn.primary:hover { transform:translateY(-2px); box-shadow:0 14px 30px rgba(255,140,0,.36); }
-  .ep-btn.ghost { background:rgba(11,18,32,.06); color:var(--navy); }
-  .ep-btn.ghost:hover { background:rgba(11,18,32,.1); transform:translateY(-2px); }
+  .ep-pagenav a:hover{ transform:translateY(-3px); box-shadow:var(--shadow-md); border-color:rgba(255,140,0,.4); }
+  .ep-pagenav a:hover .ltile{ background:linear-gradient(135deg,var(--v2-orange),var(--v2-orange2)); }
+  .ep-pagenav .next{ justify-content:flex-end; text-align:right; flex-direction:row-reverse; }
+  .pn-label{ font-size:10.5px; font-weight:700; color:var(--v2-muted); text-transform:uppercase; letter-spacing:.07em; }
+  .pn-name{ font-size:14px; font-weight:700; color:var(--v2-ink); margin-top:1px; }
 
-  /* ===== Goals section ===== */
-  .goals-section { margin-top:56px; }
-  .goals-head { text-align:center; margin-bottom:28px; }
-  .goals-head .tag {
-    display:inline-block; padding:8px 14px; background:#f1f5f9; border-radius:20px;
-    font-weight:700; color:#475569; font-size:13px; margin-bottom:12px;
+  /* ---------------- responsive ---------------- */
+  @media (max-width:1080px){
+    .ep-hero{ grid-template-columns:250px 1fr; gap:22px; }
+    .focus-accordion{ grid-template-columns:1fr; }
   }
-  .goals-head h2 { font-size:28px; font-weight:800; margin:0 0 8px; color:#071029; }
-  .goals-head p { color:var(--muted); font-size:14px; margin:0; }
-
-  .goals-toolbar {
-    display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;
-    max-width:1000px; margin:0 auto 22px; padding:0 4px;
+  @media (max-width:860px){
+    .ep-hero{ grid-template-columns:1fr; gap:16px; }
+    .ep-art{ order:-1; }
+    .ep-art img{ max-width:200px; }
+    .ep-art .fallback{ max-width:180px; }
+    .goals-tools{ margin-left:0; width:100%; }
+    .goals-search{ flex:1; }
+    .goals-search input{ width:100%; }
   }
-  .goals-search { position:relative; flex:1 1 280px; }
-  .goals-search input {
-    box-sizing:border-box; width:100%; padding:12px 16px 12px 40px; border-radius:12px;
-    border:1px solid rgba(11,18,32,.12);
-    font-size:14px; background:#fff; box-shadow:0 4px 14px rgba(15,23,42,.04);
-  }
-  .goals-search input:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(255,140,0,.15); }
-  .goals-search::before {
-    content:"\f002"; font-family:"Font Awesome 6 Free"; font-weight:900; position:absolute;
-    left:14px; top:50%; transform:translateY(-50%); color:#94a3b8; font-size:13px;
-  }
-  .goals-toggle-btn {
-    flex:0 0 auto; padding:11px 18px; border-radius:12px; border:1px solid rgba(11,18,32,.12); background:#fff;
-    font-weight:700; font-size:13px; color:var(--navy); cursor:pointer; transition:all .2s ease; white-space:nowrap;
-  }
-  .goals-toggle-btn:hover { border-color:var(--accent); color:#9a5600; }
-
-  .focus-accordion { max-width:1000px; margin:0 auto; display:flex; flex-direction:column; gap:14px; }
-  .focus-item {
-    background:#fff; border-radius:16px; box-shadow:0 8px 22px rgba(14,24,54,.06);
-    border:1px solid rgba(11,18,32,.05); overflow:hidden;
-  }
-  .focus-item-head {
-    display:flex; align-items:center; gap:14px; padding:18px 22px; cursor:pointer; user-select:none;
-  }
-  .focus-item-head .fi-num {
-    flex:0 0 34px; height:34px; border-radius:10px; display:grid; place-items:center;
-    background:linear-gradient(135deg,var(--navy),#1e293b); color:#fff; font-weight:800; font-size:13px;
-    font-family:'Manrope',sans-serif;
-  }
-  .focus-item-head .fi-title { flex:1; font-weight:700; font-size:15.5px; color:#0f172a; }
-  .focus-item-head .fi-count {
-    flex:0 0 auto; font-size:12px; font-weight:700; color:#9a5600; background:rgba(255,140,0,.1);
-    border:1px solid rgba(255,140,0,.3); padding:4px 11px; border-radius:999px;
-  }
-  .focus-item-head .fi-chev { flex:0 0 auto; color:#94a3b8; transition:transform .25s ease; }
-  .focus-item.open .fi-chev { transform:rotate(180deg); color:var(--accent); }
-  .focus-item.open .fi-num { background:linear-gradient(135deg,var(--accent),var(--accent2)); }
-
-  .focus-item-body { max-height:0; overflow:hidden; transition:max-height .3s ease; }
-  .focus-item.open .focus-item-body { max-height:2000px; }
-  .focus-item-body ul { list-style:none; margin:0; padding:2px 22px 20px 22px; }
-  .focus-item-body li {
-    display:flex; gap:10px; align-items:flex-start; padding:9px 0; font-size:14.5px; color:#374151;
-    line-height:1.6; border-top:1px dashed rgba(11,18,32,.08);
-  }
-  .focus-item-body li:first-child { border-top:none; }
-  .focus-item-body li i { color:var(--accent); margin-top:3px; font-size:12px; flex:0 0 auto; }
-
-  .focus-item.no-match { display:none; }
-  .goals-empty { text-align:center; color:var(--muted); padding:30px; display:none; }
-  .goals-empty.show { display:block; }
-
-  /* ===== Key indicator ===== */
-  .key-indicator {
-    margin-top:44px; text-align:center; padding:28px; background:#fff; border-radius:16px;
-    box-shadow:0 4px 16px rgba(0,0,0,0.04); max-width:1000px; margin-left:auto; margin-right:auto;
-  }
-  .key-indicator h4 { font-size:20px; font-weight:800; margin:0 0 12px; color:#0b1220; }
-  .key-indicator p { color:#374151; max-width:900px; margin:0 auto; font-size:15px; line-height:1.7; }
-  .key-indicator .outcome { margin-top:12px; font-weight:700; color:#9a5600; font-size:14.5px; }
-
-  /* ===== Leadership ===== */
-  .v2-leadership { max-width:1100px; margin:70px auto 40px; padding:0 20px; }
-  .v2-leadership-title {
-    text-align:center; font-family:'Manrope',Inter,sans-serif; font-weight:800; font-size:30px;
-    color:#0f172a; margin-bottom:34px; position:relative; padding-bottom:18px;
-  }
-  .v2-leadership-title span {
-    position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:90px; height:4px;
-    background:var(--accent); border-radius:3px;
-  }
-  .v2-leadership-table-wrap {
-    overflow-x:auto; background:#fff; border-radius:16px; box-shadow:0 10px 30px rgba(15,23,42,.08);
-    border:1px solid rgba(11,18,32,.06);
-  }
-  .v2-leadership-table-wrap table { width:100%; border-collapse:collapse; min-width:560px; }
-  .v2-leadership-table-wrap th {
-    text-align:left; padding:14px 18px; font-size:13px; letter-spacing:.05em; text-transform:uppercase;
-  }
-  .v2-leadership-table-wrap td { padding:13px 18px; font-size:14px; color:#0f172a; }
-  .role-badge {
-    display:inline-block; padding:5px 14px; border-radius:999px; font-size:12px; font-weight:700; letter-spacing:.04em;
-  }
-  .role-chair { background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; }
-  .role-convenor { background:var(--navy); color:#fff; }
-  .role-advisor { background:rgba(255,140,0,.12); color:#9a5600; border:1px solid rgba(255,140,0,.45); }
-  .role-member { background:rgba(11,18,32,.06); color:#334155; }
-
-  /* ===== Prev / Next ===== */
-  .ep-pagenav {
-    max-width:1100px; margin:56px auto 0; padding:0 20px; display:grid;
-    grid-template-columns:1fr 1fr; gap:16px;
-  }
-  .ep-pagenav a {
-    display:flex; align-items:center; gap:14px; background:#fff; border-radius:16px; padding:18px 22px;
-    text-decoration:none; box-shadow:0 8px 22px rgba(14,24,54,.06); border:1px solid rgba(11,18,32,.05);
-    transition:all .2s ease;
-  }
-  .ep-pagenav a:hover { transform:translateY(-3px); box-shadow:0 14px 32px rgba(255,140,0,.14); border-color:rgba(255,140,0,.35); }
-  .ep-pagenav .next { justify-content:flex-end; text-align:right; flex-direction:row-reverse; }
-  .ep-pagenav .pn-ltr {
-    flex:0 0 40px; height:40px; border-radius:11px; display:grid; place-items:center;
-    background:linear-gradient(135deg,var(--navy),#1e293b); color:#fff; font-weight:800; font-family:'Manrope',sans-serif;
-  }
-  .ep-pagenav .pn-label { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
-  .ep-pagenav .pn-name { font-size:14.5px; font-weight:700; color:#0f172a; margin-top:2px; }
-
-  /* ===== Responsive ===== */
-  @media (max-width:1100px) {
-    .hero-panel { grid-template-columns:380px 1fr; padding:32px; gap:24px; }
-  }
-  @media (max-width:980px) {
-    .hero-panel { grid-template-columns:1fr; padding:24px; text-align:center; }
-    .hero-left { order:1; margin-bottom:20px; }
-    .hero-right { order:2; }
-    .ep-cta { justify-content:center; }
-    .ep-pagenav { grid-template-columns:1fr; }
-    .ep-pagenav .next { flex-direction:row; justify-content:flex-start; text-align:left; }
-  }
-  @media (max-width:768px) {
-    .ep-wrap { padding:0 16px; }
-    .ep-header .title { font-size:26px; }
-    .ep-stats { grid-template-columns:1fr 1fr; }
-    .goals-head h2 { font-size:22px; }
-    .focus-item-head { padding:14px 16px; gap:10px; }
-    .focus-item-head .fi-title { font-size:14px; }
-  }
-  @media (max-width:480px) {
-    .ep-stats { grid-template-columns:1fr; }
-    .hero-icon-panel { max-width:280px; }
+  @media (max-width:600px){
+    .ep-stats{ grid-template-columns:1fr 1fr; }
+    .ep-cta .btn{ flex:1 1 100%; }
+    .ep-pagenav{ grid-template-columns:1fr; }
+    .ep-pagenav .next{ flex-direction:row; justify-content:flex-start; text-align:left; }
+    .ep-outcome{ flex-direction:column; gap:12px; padding:18px; }
   }
 </style>
 {% endblock %}
 
 {% block content %}
-<main class="ep-wrap">
+<div class="ep-wrap">
 
-  <div class="ep-crumb">
-    <a href="{{ url_for('enablers') }}"><i class="fa-solid fa-arrow-left"></i> All Enablers</a>
-  </div>
+  <nav class="ep-crumb" aria-label="Breadcrumb">
+    <a href="{{ url_for('enablers') }}">{{ ui.icon('arrow-left') }} All Enablers</a>
+    <span class="sep" aria-hidden="true">/</span>
+    <span class="here">Enabler {{ meta.key|upper }} · {{ meta.short_name }}</span>
+  </nav>
 
-  <header class="ep-header">
-    <span class="eyebrow">Enabler {{ meta.key|upper }} &middot; {{ meta.short_name }}</span>
-    <div class="title">{{ meta.title }}</div>
-    <p class="subtitle">Short-Term Strategic Roadmap (0–2 Years) &middot; Institutional Development Plan (IDP)</p>
-  </header>
-
-  <section class="vision">
-    <h2>🎯 Vision Statement</h2>
-    <p>{{ meta.vision }}</p>
-  </section>
-
-  <section class="hero-panel">
-    <div class="hero-left">
+  <!-- ============================= HERO ============================= -->
+  <section class="ep-hero" data-no-reveal>
+    <div class="ep-art">
       {% if meta.image %}
-        <img src="{{ url_for('static', filename='images/' + meta.image) }}" alt="{{ meta.short_name }} illustration">
+        <img src="{{ url_for('static', filename='images/' + meta.image) }}"
+             alt="{{ meta.short_name }} illustration" loading="eager">
       {% else %}
-        <div class="hero-icon-panel" data-letter="{{ meta.key|upper }}">
-          <i class="fa-solid {{ meta.icon }}"></i>
-          <div class="hip-label">{{ meta.short_name }}</div>
+        <div class="fallback">
+          {{ ui.icon(meta.icon) }}
+          <span>{{ meta.short_name }}</span>
         </div>
       {% endif %}
     </div>
 
-    <div class="hero-right">
-      <h3>At a Glance</h3>
+    <div class="ep-copy">
+      <span class="eyebrow">Enabler {{ meta.key|upper }} · {{ meta.short_name }}</span>
+      <h1>{{ meta.title }}</h1>
+      <p class="subtitle">Short-Term Strategic Roadmap (0–2 Years) · Institutional Development Plan</p>
+
+      <div class="ep-vision">
+        <h2>Vision Statement</h2>
+        <p>{{ meta.vision }}</p>
+      </div>
+
       <div class="ep-stats">
         <div class="ep-stat"><div class="n">{{ total_focus }}</div><div class="l">Focus Areas</div></div>
         <div class="ep-stat"><div class="n">{{ total_goals }}</div><div class="l">Strategic Goals</div></div>
         <div class="ep-stat"><div class="n">0–2</div><div class="l">Year Horizon</div></div>
       </div>
+
       <div class="ep-cta">
-        <a href="#goals" class="ep-btn primary"><i class="fa-solid fa-bullseye"></i> View Strategic Goals</a>
-        <a href="#leadership" class="ep-btn ghost"><i class="fa-solid fa-users"></i> Leadership Committee</a>
+        <a href="#goals" class="btn btn-primary">{{ ui.icon('bullseye') }} View Strategic Goals</a>
+        <a href="#leadership" class="btn btn-ghost">{{ ui.icon('users') }} Leadership Committee</a>
       </div>
     </div>
   </section>
 
+  <!-- ============================= GOALS ============================= -->
   <section class="goals-section" id="goals">
-    <div class="goals-head">
-      <span class="tag">⏱️ 0–2 years</span>
-      <h2>Short-Term Strategic Goals</h2>
-      <p>{{ total_goals }} goals across {{ total_focus }} focus areas driving this Enabler forward.</p>
-    </div>
-
-    <div class="goals-toolbar">
-      <div class="goals-search">
-        <input type="text" id="goalSearch" placeholder="Search focus areas or goals…" aria-label="Search goals">
+    <div class="goals-bar">
+      <div>
+        <div class="gb-title">Short-Term Strategic Goals</div>
+        <div class="gb-sub">{{ total_goals }} goals across {{ total_focus }} focus areas · 0–2 year horizon</div>
       </div>
-      <button type="button" class="goals-toggle-btn" id="toggleAllBtn" data-state="collapsed">Expand All</button>
+      <div class="goals-tools">
+        <div class="goals-search">
+          {{ ui.icon('search') }}
+          <input type="search" id="goalSearch" placeholder="Search focus areas or goals…" aria-label="Search focus areas and goals">
+        </div>
+        <button type="button" class="goals-toggle-btn" id="toggleAllBtn" data-state="collapsed">
+          {{ ui.icon('expand') }} <span id="toggleAllLabel">Expand All</span>
+        </button>
+      </div>
     </div>
 
     <div class="focus-accordion" id="focusAccordion">
       {% for focus, items in goals.items() %}
       <div class="focus-item" data-index="{{ loop.index }}">
-        <div class="focus-item-head" role="button" tabindex="0" aria-expanded="false">
-          <div class="fi-num">{{ '%02d'|format(loop.index) }}</div>
-          <div class="fi-title">{{ focus }}</div>
-          <div class="fi-count">{{ items|length }} goal{{ 's' if items|length != 1 else '' }}</div>
-          <i class="fa-solid fa-chevron-down fi-chev"></i>
-        </div>
-        <div class="focus-item-body">
+        <button type="button" class="focus-item-head" aria-expanded="false" aria-controls="fp-{{ meta.key }}-{{ loop.index }}">
+          <span class="fi-num">{{ '%02d'|format(loop.index) }}</span>
+          <span class="fi-title">{{ focus }}</span>
+          <span class="fi-count">{{ items|length }} goal{{ 's' if items|length != 1 else '' }}</span>
+          {{ ui.icon('chevron-down', 'fi-chev') }}
+        </button>
+        <div class="focus-item-body" id="fp-{{ meta.key }}-{{ loop.index }}" role="region">
           <ul>
             {% for g in items %}
-            <li><i class="fa-solid fa-circle-check"></i><span>{{ g }}</span></li>
+            <li>{{ ui.icon('circle-check') }}<span>{{ g }}</span></li>
             {% endfor %}
           </ul>
         </div>
       </div>
       {% endfor %}
     </div>
-    <p class="goals-empty" id="goalsEmpty">No focus areas match your search.</p>
+    <p class="goals-empty" id="goalsEmpty" role="status">No focus areas match your search.</p>
   </section>
 
-  <section class="key-indicator">
-    <h4>📊 Key Indicator</h4>
-    <p>{{ meta.vision }}</p>
-    <p class="outcome">Outcome: {{ meta.outcome }}</p>
+  <!-- ============================ OUTCOME ============================ -->
+  <section class="ep-outcome">
+    <div class="oi" aria-hidden="true">{{ ui.icon('flag') }}</div>
+    <div>
+      <h3>Key Indicator · Expected Outcome</h3>
+      <p>{{ meta.outcome }}</p>
+    </div>
   </section>
 
-  <section class="v2-leadership" id="leadership">
-    <div class="v2-leadership-title">Leadership Driving this Enabler<span></span></div>
-    <div class="v2-leadership-table-wrap">
+  <!-- ========================== LEADERSHIP ========================== -->
+  <section class="ep-lead" id="leadership">
+    <div class="sec-head">
+      <div>
+        <h2>Leadership Driving this <span class="accent">Enabler</span></h2>
+        <p>{{ leadership|length }} members of the Enabler {{ meta.key|upper }} committee.</p>
+      </div>
+      <div class="rule" aria-hidden="true"></div>
+      <a class="btn btn-ghost" href="{{ url_for('enablers') }}">All committees {{ ui.icon('arrow-right') }}</a>
+    </div>
+    <div class="ep-lead-wrap">
       <table>
-        <thead><tr><th>Name &amp; Designation</th><th>Position</th></tr></thead>
+        <caption class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Enabler {{ meta.key|upper }} leadership committee</caption>
+        <thead><tr><th scope="col">Name &amp; Designation</th><th scope="col" style="text-align:right">Position</th></tr></thead>
         <tbody>
           {% for name, role in leadership %}
           <tr>
@@ -354,59 +314,55 @@
 
   <nav class="ep-pagenav" aria-label="Enabler navigation">
     <a class="prev" href="{{ url_for(prev_endpoint) }}">
-      <div class="pn-ltr">{{ prev_meta.key|upper }}</div>
+      <div class="ltile">{{ prev_meta.key|upper }}</div>
       <div><div class="pn-label">Previous</div><div class="pn-name">{{ prev_meta.short_name }}</div></div>
     </a>
     <a class="next" href="{{ url_for(next_endpoint) }}">
-      <div class="pn-ltr">{{ next_meta.key|upper }}</div>
+      <div class="ltile">{{ next_meta.key|upper }}</div>
       <div><div class="pn-label">Next</div><div class="pn-name">{{ next_meta.short_name }}</div></div>
     </a>
   </nav>
 
-</main>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
 (function(){
-  const accordion = document.getElementById('focusAccordion');
-  const items = Array.from(accordion.querySelectorAll('.focus-item'));
-  const toggleAllBtn = document.getElementById('toggleAllBtn');
-  const search = document.getElementById('goalSearch');
-  const empty = document.getElementById('goalsEmpty');
+  var accordion = document.getElementById('focusAccordion');
+  var items = Array.prototype.slice.call(accordion.querySelectorAll('.focus-item'));
+  var toggleAllBtn = document.getElementById('toggleAllBtn');
+  var toggleAllLabel = document.getElementById('toggleAllLabel');
+  var search = document.getElementById('goalSearch');
+  var empty = document.getElementById('goalsEmpty');
 
-  items.forEach(item => {
-    const head = item.querySelector('.focus-item-head');
-    function toggle(){
-      const willOpen = !item.classList.contains('open');
-      item.classList.toggle('open', willOpen);
-      head.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-    }
-    head.addEventListener('click', toggle);
-    head.addEventListener('keyup', (e) => { if (e.key === 'Enter' || e.key === ' ') toggle(); });
+  function setOpen(item, open){
+    item.classList.toggle('open', open);
+    item.querySelector('.focus-item-head').setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  items.forEach(function(item){
+    item.querySelector('.focus-item-head').addEventListener('click', function(){
+      setOpen(item, !item.classList.contains('open'));
+    });
   });
 
-  toggleAllBtn.addEventListener('click', () => {
-    const expanding = toggleAllBtn.dataset.state === 'collapsed';
-    items.forEach(item => {
-      item.classList.toggle('open', expanding);
-      item.querySelector('.focus-item-head').setAttribute('aria-expanded', expanding ? 'true' : 'false');
-    });
+  toggleAllBtn.addEventListener('click', function(){
+    var expanding = toggleAllBtn.dataset.state === 'collapsed';
+    items.forEach(function(item){ setOpen(item, expanding); });
     toggleAllBtn.dataset.state = expanding ? 'expanded' : 'collapsed';
-    toggleAllBtn.textContent = expanding ? 'Collapse All' : 'Expand All';
+    toggleAllLabel.textContent = expanding ? 'Collapse All' : 'Expand All';
   });
 
-  search.addEventListener('input', () => {
-    const q = search.value.trim().toLowerCase();
-    let visibleCount = 0;
-    items.forEach(item => {
-      const text = item.textContent.toLowerCase();
-      const matches = q === '' || text.includes(q);
+  search.addEventListener('input', function(){
+    var q = search.value.trim().toLowerCase();
+    var visible = 0;
+    items.forEach(function(item){
+      var matches = q === '' || item.textContent.toLowerCase().indexOf(q) !== -1;
       item.classList.toggle('no-match', !matches);
-      if (matches) visibleCount++;
-      if (q !== '' && matches) item.classList.add('open');
+      if (matches){ visible++; if (q !== '') setOpen(item, true); }
     });
-    empty.classList.toggle('show', visibleCount === 0);
+    empty.classList.toggle('show', visible === 0);
   });
 })();
 </script>
