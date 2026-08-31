@@ -1,102 +1,134 @@
 {% extends "base.html" %}
+{% import "_icons.html" as ui %}
 
 {% block title %}Committees — All Enablers (A–I) — IDP{% endblock %}
 
 {% block styles %}
 <style>
-  :root{ --accent:#ff8c00; --accent2:#ffa733; --navy:#0b1220; --muted:#64748b; }
+  .ce-wrap{ max-width:1240px; margin:0 auto; padding:0 clamp(16px,3vw,26px); }
 
-  .ce-wrap { max-width:1200px; margin:20px auto 60px; padding:0 20px; }
+  .ce-header{ margin:22px 0 16px; display:grid; grid-template-columns:1fr auto; gap:20px; align-items:end; }
+  .ce-header h1{ font-size:clamp(23px,2.8vw,31px); font-weight:800; margin:10px 0 6px; color:var(--v2-ink); }
+  .ce-header h1 .accent{ color:var(--v2-orange); }
+  .ce-header p{ color:var(--v2-muted); font-size:14px; margin:0; max-width:62ch; }
 
-  .ce-header { text-align:center; margin-bottom:36px; }
-  .ce-header .eyebrow {
-    display:inline-flex; align-items:center; gap:8px; padding:7px 16px; border-radius:999px;
-    background:rgba(255,140,0,.10); border:1px solid rgba(255,140,0,.35); color:#9a5600;
-    font-weight:800; font-size:12px; letter-spacing:.12em; text-transform:uppercase; margin-bottom:16px;
+  /* ---------- principal committee strip ---------- */
+  .pc-strip{
+    display:grid; grid-template-columns:220px repeat(4,1fr);
+    background:#fff; border:1px solid var(--v2-line); border-radius:var(--r-lg);
+    box-shadow:var(--shadow-sm); overflow:hidden; margin-bottom:22px;
   }
-  .ce-header h1 {
-    font-size:34px; font-weight:900; margin:0 0 10px; line-height:1.2;
-    background: linear-gradient(135deg, #ff8c00, #07316a);
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  .pc-lead{
+    background:linear-gradient(135deg,var(--v2-navy),#16233c); color:#fff;
+    padding:16px 18px; display:flex; flex-direction:column; justify-content:center; gap:5px;
   }
-  .ce-header p { color:var(--muted); font-size:15px; margin:0; max-width:640px; margin:0 auto; }
+  .pc-lead .ic{ font-size:20px; color:var(--v2-orange2); }
+  .pc-lead h2{ font-size:15px; font-weight:800; color:#fff; line-height:1.25; }
+  .pc-lead span{ font-size:11px; color:#9fb0c6; }
+  .pc-item{ padding:14px 16px; border-left:1px solid var(--v2-line); min-width:0; }
+  .pc-item .nm{ font-weight:700; font-size:13.5px; color:var(--v2-ink); line-height:1.3; }
+  .pc-item .dg{ font-size:11.5px; color:var(--v2-muted); line-height:1.35; margin-top:2px; }
+  .pc-item .role-badge{ margin-top:7px; }
 
-  .ce-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
-
-  .ce-card {
-    background:#fff; border-radius:18px; box-shadow:0 10px 28px rgba(15,23,42,.07);
-    border:1px solid rgba(11,18,32,.05); overflow:hidden; transition:all .22s ease;
+  /* ---------- committee cards ---------- */
+  .ce-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; align-items:start; }
+  .ce-card{
+    background:#fff; border:1px solid var(--v2-line); border-radius:var(--r-lg);
+    box-shadow:var(--shadow-sm); overflow:hidden; transition:box-shadow .2s ease, border-color .2s ease;
   }
-  .ce-card:hover { transform:translateY(-6px); box-shadow:0 20px 44px rgba(15,23,42,.12); }
-
-  .ce-card-head {
-    display:flex; align-items:center; gap:14px; padding:20px 22px; cursor:pointer; user-select:none;
+  .ce-card:hover{ box-shadow:var(--shadow-md); border-color:rgba(255,140,0,.35); }
+  .ce-card-head{
+    display:flex; align-items:center; gap:12px; padding:14px 16px; cursor:pointer;
+    width:100%; background:none; border:none; text-align:left; font-family:inherit;
   }
-  .ce-ltr {
-    flex:0 0 46px; height:46px; border-radius:13px; display:grid; place-items:center;
-    font-family:'Manrope',sans-serif; font-weight:800; font-size:19px; color:#fff;
-    background:linear-gradient(135deg,var(--navy),#1e293b);
+  .ce-card-head:hover{ background:rgba(255,140,0,.05); }
+  .ce-card-head:focus-visible{ outline:3px solid rgba(255,140,0,.5); outline-offset:-3px; }
+  .ce-titles{ flex:1; min-width:0; }
+  .ce-titles .name{ font-family:'Manrope',sans-serif; font-weight:800; font-size:14.5px; color:var(--v2-ink); line-height:1.3; }
+  .ce-titles .count{ font-size:11.5px; color:var(--v2-muted); margin-top:1px; }
+  .ce-chev{ color:#94a3b8; font-size:15px; transition:transform .25s ease; }
+  .ce-card.open .ce-chev{ transform:rotate(180deg); color:var(--v2-orange); }
+  .ce-card.open .ltile{ background:linear-gradient(135deg,var(--v2-orange),var(--v2-orange2)); }
+
+  .ce-card-body{ max-height:0; overflow:hidden; transition:max-height .3s ease; }
+  .ce-card.open .ce-card-body{ max-height:1200px; }
+  .ce-card-body table{ width:100%; border-collapse:collapse; }
+  .ce-card-body th{
+    text-align:left; padding:8px 16px; font-size:10.5px; letter-spacing:.07em; text-transform:uppercase;
   }
-  .ce-card.open .ce-ltr { background:linear-gradient(135deg,var(--accent),var(--accent2)); }
-  .ce-titles { flex:1; min-width:0; }
-  .ce-titles .name { font-weight:800; font-size:15px; color:#0f172a; line-height:1.3; }
-  .ce-titles .count { font-size:12px; color:var(--muted); margin-top:2px; }
-  .ce-chev { color:#94a3b8; transition:transform .25s ease; flex:0 0 auto; }
-  .ce-card.open .ce-chev { transform:rotate(180deg); color:var(--accent); }
-
-  .ce-card-body { max-height:0; overflow:hidden; transition:max-height .3s ease; }
-  .ce-card.open .ce-card-body { max-height:900px; }
-
-  .ce-card-body table { width:100%; border-collapse:collapse; }
-  .ce-card-body th {
-    text-align:left; padding:10px 22px; font-size:11px; letter-spacing:.05em; text-transform:uppercase;
-    background:rgba(11,18,32,.03); color:#64748b;
+  .ce-card-body th:last-child{ text-align:right; }
+  .ce-card-body td{ padding:9px 16px; font-size:12.5px; color:var(--v2-ink); border-top:1px solid var(--v2-line); vertical-align:top; }
+  .ce-card-body td:last-child{ text-align:right; white-space:nowrap; }
+  .ce-card-foot{ padding:11px 16px 14px; border-top:1px solid var(--v2-line); }
+  .ce-card-foot a{
+    display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:700;
+    color:var(--v2-orange-ink); text-decoration:none;
   }
-  .ce-card-body td { padding:10px 22px; font-size:13.5px; color:#0f172a; border-top:1px solid rgba(11,18,32,.05); }
+  .ce-card-foot a:hover{ text-decoration:underline; }
 
-  .role-badge { display:inline-block; padding:3px 11px; border-radius:999px; font-size:11px; font-weight:700; letter-spacing:.03em; }
-  .role-chair { background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; }
-  .role-convenor { background:var(--navy); color:#fff; }
-  .role-advisor { background:rgba(255,140,0,.12); color:#9a5600; border:1px solid rgba(255,140,0,.45); }
-  .role-member { background:rgba(11,18,32,.06); color:#334155; }
-
-  .ce-card-foot { padding:14px 22px 20px; }
-  .ce-card-foot a {
-    display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:#9a5600;
-    text-decoration:none;
+  @media (max-width:1080px){
+    .ce-grid{ grid-template-columns:repeat(2,1fr); }
+    .pc-strip{ grid-template-columns:repeat(2,1fr); }
+    .pc-lead{ grid-column:1 / -1; flex-direction:row; align-items:center; gap:12px; }
+    .pc-item:nth-child(even){ border-left:none; }
+    .pc-item{ border-top:1px solid var(--v2-line); }
   }
-  .ce-card-foot a:hover { text-decoration:underline; }
-
-  @media (max-width:980px) { .ce-grid { grid-template-columns:repeat(2,1fr); } }
-  @media (max-width:640px) { .ce-grid { grid-template-columns:1fr; } .ce-wrap { padding:0 16px; } .ce-header h1 { font-size:26px; } }
+  @media (max-width:760px){
+    .ce-header{ grid-template-columns:1fr; }
+  }
+  @media (max-width:600px){
+    .ce-grid{ grid-template-columns:1fr; }
+    .pc-strip{ grid-template-columns:1fr; }
+    .pc-item{ border-left:none; }
+  }
 </style>
 {% endblock %}
 
 {% block content %}
-<main class="ce-wrap">
+<div class="ce-wrap">
 
-  <div class="ce-header">
-    <span class="eyebrow">Institutional Development Plan</span>
-    <h1>Enabler Committees (A – I)</h1>
-    <p>Click a committee to view its members and roles. Nine strategic Enablers, each led by a dedicated leadership team.</p>
-  </div>
+  <header class="ce-header">
+    <div>
+      <span class="eyebrow">Institutional Development Plan</span>
+      <h1>Committees <span class="accent">A – I</span></h1>
+      <p>Nine strategic Enablers, each led by a dedicated leadership team. Open a committee to see its members and roles.</p>
+    </div>
+    <button type="button" class="btn btn-ghost" id="expandAllCommittees" data-state="collapsed">
+      {{ ui.icon('expand') }} <span id="expandAllLabel">Expand all</span>
+    </button>
+  </header>
+
+  <section class="pc-strip" aria-label="Principal Coordination Committee">
+    <div class="pc-lead">
+      {{ ui.icon('user-tie') }}
+      <h2>Principal Coordination Committee</h2>
+      <span>Apex body steering the IDP</span>
+    </div>
+    {% for name, designation, role in principal_committee %}
+    <div class="pc-item">
+      <div class="nm">{{ name }}</div>
+      <div class="dg">{{ designation }}</div>
+      <span class="role-badge {% if role == 'Chairperson' %}role-chair{% elif role == 'Vice Chairperson' %}role-convenor{% else %}role-member{% endif %}">{{ role }}</span>
+    </div>
+    {% endfor %}
+  </section>
 
   <div class="ce-grid">
     {% for key in enabler_order %}
     {% set meta = all_meta[key] %}
     {% set rows = leadership[key] %}
     <div class="ce-card" data-index="{{ loop.index }}">
-      <div class="ce-card-head" role="button" tabindex="0" aria-expanded="false">
-        <div class="ce-ltr">{{ key|upper }}</div>
-        <div class="ce-titles">
-          <div class="name">{{ meta.short_name }}</div>
-          <div class="count">{{ rows|length }} committee member{{ 's' if rows|length != 1 else '' }}</div>
-        </div>
-        <i class="fa-solid fa-chevron-down ce-chev"></i>
-      </div>
-      <div class="ce-card-body">
+      <button type="button" class="ce-card-head" aria-expanded="false" aria-controls="cc-{{ key }}">
+        <span class="ltile">{{ key|upper }}</span>
+        <span class="ce-titles">
+          <span class="name">{{ meta.short_name }}</span>
+          <span class="count">Enabler {{ key|upper }} · {{ rows|length }} member{{ 's' if rows|length != 1 else '' }}</span>
+        </span>
+        {{ ui.icon('chevron-down', 'ce-chev') }}
+      </button>
+      <div class="ce-card-body" id="cc-{{ key }}" role="region">
         <table>
-          <thead><tr><th>Name &amp; Designation</th><th>Position</th></tr></thead>
+          <thead><tr><th scope="col">Name &amp; Designation</th><th scope="col">Position</th></tr></thead>
           <tbody>
             {% for name, role in rows %}
             <tr>
@@ -113,31 +145,37 @@
           </tbody>
         </table>
         <div class="ce-card-foot">
-          <a href="{{ url_for(endpoints[key]) }}">View Enabler {{ key|upper }} strategic goals <i class="fa-solid fa-arrow-right"></i></a>
+          <a href="{{ url_for(endpoints[key]) }}">Enabler {{ key|upper }} strategic goals {{ ui.icon('arrow-right') }}</a>
         </div>
       </div>
     </div>
     {% endfor %}
   </div>
 
-  <footer class="mt-10 text-sm text-gray-500 text-center">
-    <p>© {{ current_year if current_year is defined else '2026' }} IDP Committees Dashboard.</p>
-  </footer>
-
-</main>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-  document.querySelectorAll('.ce-card-head').forEach(head => {
-    function toggle() {
-      const card = head.closest('.ce-card');
-      const willOpen = !card.classList.contains('open');
-      card.classList.toggle('open', willOpen);
-      head.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-    }
-    head.addEventListener('click', toggle);
-    head.addEventListener('keyup', (e) => { if (e.key === 'Enter' || e.key === ' ') toggle(); });
+(function(){
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.ce-card'));
+  function setOpen(card, open){
+    card.classList.toggle('open', open);
+    card.querySelector('.ce-card-head').setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  cards.forEach(function(card){
+    card.querySelector('.ce-card-head').addEventListener('click', function(){
+      setOpen(card, !card.classList.contains('open'));
+    });
   });
+  var btn = document.getElementById('expandAllCommittees');
+  var label = document.getElementById('expandAllLabel');
+  btn.addEventListener('click', function(){
+    var expanding = btn.dataset.state === 'collapsed';
+    cards.forEach(function(c){ setOpen(c, expanding); });
+    btn.dataset.state = expanding ? 'expanded' : 'collapsed';
+    label.textContent = expanding ? 'Collapse all' : 'Expand all';
+  });
+})();
 </script>
 {% endblock %}

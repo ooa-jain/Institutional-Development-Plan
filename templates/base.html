@@ -429,7 +429,7 @@ td,th{ border-color:var(--v2-line) !important; }
      Only elements that start BELOW the fold are hidden, so above-the-fold
      content is always painted immediately.                                */
   var sel='.card,.panel,.goal-card,.summary-card,.v2-stat,.v2-chip,.timeline > *,'+
-          '.section-title,.hero-text,.hero-img,table,[data-reveal]';
+          '.section-title,.hero-text,.hero-img,[data-reveal]';
   var targets=[].slice.call(document.querySelectorAll(sel))
       .filter(function(el){ return !el.closest('[data-no-reveal]'); });
   var vh=window.innerHeight||800;
@@ -446,6 +446,12 @@ td,th{ border-color:var(--v2-line) !important; }
     },{threshold:0.06, rootMargin:'0px 0px -40px 0px'});
     deferred.forEach(function(el){ io.observe(el); });
   } else { deferred.forEach(function(el){ el.classList.add('in'); }); }
+
+  /* Safety net: content must never stay invisible because of the animation.
+     Reveal anything still hidden after a moment, and before printing.      */
+  function revealAll(){ deferred.forEach(function(el){ el.classList.add('in'); }); }
+  setTimeout(revealAll, 2500);
+  window.addEventListener('beforeprint', revealAll);
 
   /* ---------- animated counters ---------- */
   var nums=document.querySelectorAll('.num[data-count]');

@@ -1,124 +1,148 @@
 {% extends "base.html" %}
+{% import "_icons.html" as ui %}
 
-{% block title %}Short-Term Goal Progress — Overview{% endblock %}
+{% block title %}Short-Term Goal Overview — IDP{% endblock %}
 
 {% block styles %}
 <style>
-:root {
-  --bg: #f5f8fc;
-  --card: #ffffff;
-  --accent: #ff8c00;
-  --accent2: #ffb066;
-  --muted: #64748b;
-  --navy: #0b1220;
-  --shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
-  --shadow-hover: 0 18px 40px rgba(0, 0, 0, 0.12);
-}
+  .ov-wrap{ max-width:1240px; margin:0 auto; padding:0 clamp(16px,3vw,26px); }
 
-.ov-wrap { max-width:1200px; margin:20px auto 60px; padding:0 20px; }
+  /* ---------------- header + stats in one panel ---------------- */
+  .ov-panel{
+    margin-top:20px; border-radius:20px; overflow:hidden;
+    border:1px solid var(--v2-line); box-shadow:var(--shadow-lg);
+  }
+  .ov-head{
+    background:linear-gradient(135deg,#071029 0%,#0f2746 100%); color:#fff;
+    padding:26px clamp(20px,3vw,32px); position:relative; overflow:hidden;
+  }
+  .ov-head::after{
+    content:""; position:absolute; inset:auto -70px -90px auto; width:250px; height:250px; border-radius:50%;
+    background:radial-gradient(circle,rgba(255,140,0,.28),transparent 70%);
+  }
+  .ov-head h1{
+    font-size:clamp(23px,2.8vw,31px); font-weight:800; margin:11px 0 8px; color:#fff; position:relative;
+  }
+  .ov-head h1 .accent{ color:var(--v2-orange2); }
+  .ov-head p{ margin:0; color:rgba(255,255,255,.82); font-size:14px; max-width:70ch; position:relative; line-height:1.6; }
 
-.ov-header {
-  background: linear-gradient(135deg, #071029 0%, #0f2746 100%);
-  color:#fff; padding:40px 36px; border-radius:22px; margin-bottom:6px;
-  box-shadow: 0 20px 50px rgba(11,19,30,.18); position:relative; overflow:hidden;
-}
-.ov-header::after{
-  content:""; position:absolute; inset:auto -60px -60px auto; width:260px; height:260px; border-radius:50%;
-  background: radial-gradient(circle, rgba(255,140,0,.25), transparent 70%);
-}
-.ov-header .eyebrow {
-  display:inline-flex; align-items:center; gap:8px; padding:7px 16px; border-radius:999px;
-  background:rgba(255,140,0,.16); border:1px solid rgba(255,140,0,.4); color:#ffcf94;
-  font-weight:800; font-size:12px; letter-spacing:.12em; text-transform:uppercase; margin-bottom:16px;
-}
-.ov-header h1 {
-  font-size:32px; font-weight:900; margin:0 0 10px;
-  background: linear-gradient(90deg,#fff 0%,#ffb066 100%);
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-}
-.ov-header p { margin:0; color:rgba(255,255,255,.85); font-size:15px; max-width:640px; position:relative; }
+  .ov-stats{ display:grid; grid-template-columns:repeat(4,1fr); background:#fff; }
+  .ov-stat{ padding:16px 14px; text-align:center; border-left:1px solid var(--v2-line); }
+  .ov-stat:first-child{ border-left:none; }
+  .ov-stat .n{ font-family:'Manrope',sans-serif; font-weight:800; font-size:clamp(24px,2.8vw,30px); color:var(--v2-ink); line-height:1.1; }
+  .ov-stat .l{ margin-top:2px; font-size:11px; font-weight:700; color:var(--v2-muted); text-transform:uppercase; letter-spacing:.08em; }
 
-.ov-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin:28px 0 44px; }
-.ov-stat {
-  background:#fff; border:1px solid rgba(11,18,32,.07); border-radius:18px; padding:24px 16px; text-align:center;
-  box-shadow:var(--shadow); transition:all .25s ease;
-}
-.ov-stat:hover { transform:translateY(-5px); box-shadow:var(--shadow-hover); }
-.ov-stat .n { font-family:'Manrope',sans-serif; font-weight:800; font-size:34px; color:var(--navy); }
-.ov-stat .l { margin-top:6px; font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; }
+  /* ---------------- enabler cards ---------------- */
+  .ov-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:13px; }
+  .ov-card{
+    background:#fff; border:1px solid var(--v2-line); border-radius:var(--r-lg);
+    padding:15px 17px 13px; box-shadow:var(--shadow-sm); text-decoration:none; display:flex;
+    flex-direction:column; gap:10px; transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    position:relative; overflow:hidden;
+  }
+  .ov-card::after{
+    content:""; position:absolute; left:0; right:0; top:0; height:3px;
+    background:linear-gradient(90deg,var(--v2-orange),var(--v2-orange2));
+    transform:scaleX(0); transform-origin:left; transition:transform .3s ease;
+  }
+  .ov-card:hover{ transform:translateY(-4px); box-shadow:var(--shadow-lg); border-color:rgba(255,140,0,.4); }
+  .ov-card:hover::after{ transform:scaleX(1); }
+  .ov-card:hover .ltile{ background:linear-gradient(135deg,var(--v2-orange),var(--v2-orange2)); }
 
-.ov-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  .ov-card-head{ display:flex; align-items:center; gap:11px; }
+  .ov-card-head .nm{ font-family:'Manrope',sans-serif; font-weight:800; font-size:15px; color:var(--v2-ink); line-height:1.25; }
+  .ov-card-head .sub{ font-size:10.5px; color:var(--v2-muted); font-weight:700; letter-spacing:.09em; text-transform:uppercase; }
+  .ov-card-head .ic{ margin-left:auto; color:rgba(11,18,32,.28); font-size:19px; }
+  .ov-card:hover .ov-card-head .ic{ color:var(--v2-orange); }
 
-.ov-card {
-  background:var(--card); border-radius:18px; padding:24px; box-shadow:var(--shadow);
-  border:1px solid rgba(11,18,32,.05); transition:all .25s ease; text-decoration:none; display:block;
-  position:relative; overflow:hidden;
-}
-.ov-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-hover); border-color:rgba(255,140,0,.35); }
-.ov-card-head { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
-.ov-ltr {
-  flex:0 0 44px; height:44px; border-radius:13px; display:grid; place-items:center;
-  font-family:'Manrope',sans-serif; font-weight:800; font-size:18px; color:#fff;
-  background:linear-gradient(135deg,var(--navy),#1e293b);
-}
-.ov-card:hover .ov-ltr { background:linear-gradient(135deg,var(--accent),var(--accent2)); }
-.ov-card-head .nm { font-weight:800; font-size:16px; color:#0f172a; }
-.ov-card-head .sub { font-size:12px; color:var(--muted); margin-top:2px; }
+  .ov-bar{ height:5px; border-radius:3px; background:rgba(11,18,32,.07); overflow:hidden; }
+  .ov-bar span{ display:block; height:100%; border-radius:3px; background:linear-gradient(90deg,var(--v2-orange),var(--v2-orange2)); }
 
-.ov-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px; }
-.ov-tag {
-  font-size:11.5px; font-weight:600; color:#475569; background:#f1f5f9; padding:5px 10px; border-radius:999px;
-}
+  .ov-metrics{ display:flex; gap:16px; }
+  .ov-metrics div{ font-size:11px; color:var(--v2-muted); font-weight:600; text-transform:uppercase; letter-spacing:.05em; }
+  .ov-metrics b{ display:block; font-size:19px; color:var(--v2-ink); font-family:'Manrope',sans-serif; line-height:1.15; letter-spacing:-.01em; }
 
-.ov-metrics { display:flex; gap:18px; padding-top:14px; border-top:1px dashed rgba(11,18,32,.1); }
-.ov-metrics div { font-size:12px; color:var(--muted); }
-.ov-metrics b { display:block; font-size:18px; color:var(--navy); font-family:'Manrope',sans-serif; }
+  .ov-tags{ display:flex; flex-wrap:wrap; gap:5px; }
+  .ov-tag{
+    font-size:11px; font-weight:600; color:#475569; background:#f1f5f9; padding:4px 9px; border-radius:999px;
+    max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .ov-cta{
+    margin-top:auto; padding-top:9px; border-top:1px dashed var(--v2-line);
+    font-size:12.5px; font-weight:700; color:var(--v2-orange-ink); display:flex; align-items:center; gap:7px;
+  }
 
-.ov-cta { margin-top:14px; font-size:13px; font-weight:700; color:#9a5600; display:flex; align-items:center; gap:6px; }
-
-@media (max-width:1024px) { .ov-stats { grid-template-columns:repeat(2,1fr); } .ov-grid { grid-template-columns:repeat(2,1fr); } }
-@media (max-width:640px) { .ov-stats { grid-template-columns:1fr 1fr; } .ov-grid { grid-template-columns:1fr; } .ov-header { padding:28px 22px; } .ov-header h1 { font-size:24px; } }
+  @media (max-width:1024px){ .ov-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:700px){
+    .ov-stats{ grid-template-columns:repeat(2,1fr); }
+    .ov-stat:nth-child(3){ border-left:none; }
+    .ov-stat:nth-child(n+3){ border-top:1px solid var(--v2-line); }
+  }
+  @media (max-width:560px){ .ov-grid{ grid-template-columns:1fr; } }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="ov-wrap">
 
-  <div class="ov-header">
-    <span class="eyebrow">Institutional Development Plan</span>
-    <h1>Short-Term Goal Progress Overview</h1>
-    <p>A single 0–2 year horizon drives every Enabler now — mid-term and long-term milestones have been retired in favour of one focused, near-term strategy plan.</p>
-  </div>
+  <section class="ov-panel" data-no-reveal>
+    <div class="ov-head">
+      <span class="eyebrow on-dark">Institutional Development Plan</span>
+      <h1>Short-Term Goal <span class="accent">Overview</span></h1>
+      <p>A single 0–2 year horizon drives every Enabler now — mid-term and long-term milestones have been retired in favour of one focused, near-term strategy plan.</p>
+    </div>
+    <div class="ov-stats">
+      <div class="ov-stat"><div class="n">{{ total_enablers }}</div><div class="l">Strategic Enablers</div></div>
+      <div class="ov-stat"><div class="n">{{ total_focus }}</div><div class="l">Focus Areas</div></div>
+      <div class="ov-stat"><div class="n">{{ total_goals }}</div><div class="l">Short-Term Goals</div></div>
+      <div class="ov-stat"><div class="n">0–2</div><div class="l">Year Horizon</div></div>
+    </div>
+  </section>
 
-  <div class="ov-stats">
-    <div class="ov-stat"><div class="n">{{ total_enablers }}</div><div class="l">Strategic Enablers</div></div>
-    <div class="ov-stat"><div class="n">{{ total_focus }}</div><div class="l">Focus Areas</div></div>
-    <div class="ov-stat"><div class="n">{{ total_goals }}</div><div class="l">Short-Term Goals</div></div>
-    <div class="ov-stat"><div class="n">0–2</div><div class="l">Year Horizon</div></div>
-  </div>
+  <section class="sec">
+    <div class="sec-head">
+      <div>
+        <h2>Goals by <span class="accent">Enabler</span></h2>
+        <p>Relative share of the {{ total_goals }} short-term goals carried by each Enabler.</p>
+      </div>
+      <div class="rule" aria-hidden="true"></div>
+      <a class="btn btn-ghost" href="{{ url_for('enablers') }}">Committees {{ ui.icon('arrow-right') }}</a>
+    </div>
 
-  <div class="ov-grid">
-    {% for s in summaries %}
-    <a class="ov-card" href="{{ url_for(s.endpoint) }}">
-      <div class="ov-card-head">
-        <div class="ov-ltr">{{ s.meta.key|upper }}</div>
-        <div>
-          <div class="nm">{{ s.meta.short_name }}</div>
-          <div class="sub">Enabler {{ s.meta.key|upper }}</div>
+    <div class="ov-grid">
+      {% set max_goals = summaries|map(attribute='n_goals')|max %}
+      {% for s in summaries %}
+      <a class="ov-card" href="{{ url_for(s.endpoint) }}">
+        <div class="ov-card-head">
+          <div class="ltile">{{ s.meta.key|upper }}</div>
+          <div>
+            <div class="sub">Enabler {{ s.meta.key|upper }}</div>
+            <div class="nm">{{ s.meta.short_name }}</div>
+          </div>
+          {{ ui.icon(s.meta.icon) }}
         </div>
-      </div>
-      <div class="ov-tags">
-        {% for f in s.sample_focus %}<span class="ov-tag">{{ f }}</span>{% endfor %}
-        {% if s.n_focus > s.sample_focus|length %}<span class="ov-tag">+{{ s.n_focus - s.sample_focus|length }} more</span>{% endif %}
-      </div>
-      <div class="ov-metrics">
-        <div><b>{{ s.n_focus }}</b>Focus Areas</div>
-        <div><b>{{ s.n_goals }}</b>Goals</div>
-      </div>
-      <div class="ov-cta">View strategic goals <i class="fa-solid fa-arrow-right"></i></div>
-    </a>
-    {% endfor %}
-  </div>
+
+        <div class="ov-metrics">
+          <div><b>{{ s.n_focus }}</b>Focus areas</div>
+          <div><b>{{ s.n_goals }}</b>Goals</div>
+          <div><b>0–2</b>Years</div>
+        </div>
+
+        <div class="ov-bar" role="img"
+             aria-label="{{ s.n_goals }} of {{ total_goals }} short-term goals">
+          <span style="width:{{ (s.n_goals * 100 // max_goals) }}%"></span>
+        </div>
+
+        <div class="ov-tags">
+          {% for f in s.sample_focus %}<span class="ov-tag">{{ f }}</span>{% endfor %}
+          {% if s.n_focus > s.sample_focus|length %}<span class="ov-tag">+{{ s.n_focus - s.sample_focus|length }} more</span>{% endif %}
+        </div>
+
+        <div class="ov-cta">View strategic goals {{ ui.icon('arrow-right') }}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
 
 </div>
 {% endblock %}

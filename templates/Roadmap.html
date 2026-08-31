@@ -1,314 +1,211 @@
 {% extends "base.html" %}
-{% block title %}Roadmap — Institutional Growth{% endblock %}
+{% import "_icons.html" as ui %}
+
+{% block title %}Roadmap — Institutional Growth &amp; Transformation{% endblock %}
 
 {% block styles %}
 <style>
-:root{
-  --bg-1: #05292f;
-  --bg-2: #0b4f57;
-  --accent: #2ba0a0;
-  --card-bg: #ffffff;
-  --muted:#cfe9e7;
-  --shadow: 0 20px 60px rgba(2,18,20,0.36);
-  --radius:14px;
-}
+  .rm-wrap{ max-width:1240px; margin:0 auto; padding:0 clamp(16px,3vw,26px); }
 
-/* ====== Page spacing so fixed topbar doesn't overlap ====== */
-.page-wrap {
-  max-width:1200px;
-  margin:48px auto 80px;
-  padding:0 18px;
-  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-  color:var(--card-bg);
-}
+  /* ---------------- hero ---------------- */
+  .rm-hero{
+    display:grid; grid-template-columns:1fr 300px; gap:26px; align-items:center;
+    margin-top:20px; padding:24px clamp(20px,3vw,32px);
+    background:linear-gradient(135deg,#ffffff 0%,#fbfdff 60%,#fff6ea 100%);
+    border:1px solid var(--v2-line); border-radius:20px; box-shadow:var(--shadow-lg);
+  }
+  .rm-hero h1{ font-size:clamp(23px,2.9vw,32px); font-weight:800; line-height:1.16; margin:12px 0 10px; color:var(--v2-ink); }
+  .rm-hero h1 .accent{ color:var(--v2-orange); }
+  .rm-hero p{ margin:0 0 14px; color:var(--v2-muted); font-size:14.5px; line-height:1.62; max-width:62ch; }
+  .rm-chips{ display:flex; gap:8px; flex-wrap:wrap; }
+  .rm-chip{
+    display:inline-flex; align-items:center; gap:7px; padding:7px 13px; border-radius:999px;
+    background:#fff; border:1px solid var(--v2-line); box-shadow:var(--shadow-sm);
+    font-size:12.5px; font-weight:700; color:var(--v2-ink);
+  }
+  .rm-chip .ic{ color:var(--v2-orange); font-size:14px; }
+  .rm-art{ display:flex; align-items:center; justify-content:center; position:relative; }
+  .rm-art::before{
+    content:""; position:absolute; width:82%; aspect-ratio:1/1; border-radius:50%;
+    background:radial-gradient(circle,rgba(255,140,0,.15),transparent 68%);
+  }
+  .rm-art img{ position:relative; width:100%; max-width:270px; height:auto; display:block; }
 
-/* ====== HERO ====== */
-.roadmap-hero {
-  display:flex;
-  gap:28px;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:18px;
-  padding-top:8px;
-}
-.roadmap-hero .intro {
-  flex:1 1 100%;
-  color: #072027 !important;
-  z-index:2;
-  position:relative;
-  padding-right:12px;
-}
-.roadmap-hero .intro.visible { opacity: 1; transform: none; }
-.roadmap-hero h1 {
-  margin:0 0 8px;
-  font-weight:800;
-  font-size:34px;
-  color:#072027;
-  line-height:1.02;
-  text-shadow: 0 8px 24px rgba(2,18,20,0.04);
-}
-.roadmap-hero p.lead {
-  margin:0;
-  color: #0b1220 !important;
-  opacity: 1 !important;
-  font-size:15px;
-  line-height:1.6;
-}
+  /* ---------------- phases ---------------- */
+  .rm-phases{
+    list-style:none; margin:0; padding:0; position:relative;
+    display:grid; grid-template-columns:repeat(4,1fr); gap:14px;
+  }
+  .rm-phases::before{
+    content:""; position:absolute; top:24px; left:12.5%; right:12.5%; height:3px; border-radius:2px;
+    background:linear-gradient(90deg,var(--v2-orange),var(--v2-orange2),var(--v2-orange));
+    opacity:.45;
+  }
+  .rm-phase{ display:flex; flex-direction:column; align-items:center; }
+  .rm-node{
+    position:relative; z-index:1; width:50px; height:50px; border-radius:50%;
+    display:grid; place-items:center; margin-bottom:14px;
+    background:linear-gradient(135deg,var(--v2-navy),var(--v2-navy2)); color:#fff;
+    font-family:'Manrope',sans-serif; font-weight:800; font-size:16px;
+    border:4px solid #eef3fa; box-shadow:0 8px 20px rgba(11,18,32,.2);
+  }
+  .rm-phase:hover .rm-node{ background:linear-gradient(135deg,var(--v2-orange),var(--v2-orange2)); }
+  .rm-card{
+    width:100%; flex:1; background:#fff; border:1px solid var(--v2-line); border-radius:var(--r-lg);
+    padding:16px 17px; box-shadow:var(--shadow-sm);
+    transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  }
+  .rm-phase:hover .rm-card{ transform:translateY(-4px); box-shadow:var(--shadow-lg); border-color:rgba(255,140,0,.4); }
+  .rm-tag{
+    display:inline-block; padding:4px 11px; border-radius:999px; font-size:11px; font-weight:800;
+    letter-spacing:.06em; text-transform:uppercase; margin-bottom:9px;
+    background:rgba(255,140,0,.12); color:var(--v2-orange-ink); border:1px solid rgba(255,140,0,.32);
+  }
+  .rm-card h3{ font-size:15.5px; font-weight:800; margin:0 0 7px; color:var(--v2-ink); line-height:1.28; }
+  .rm-card p{ margin:0; font-size:13px; line-height:1.6; color:var(--v2-muted); }
 
-/* ====== ROADMAP PANEL ====== */
-.roadmap-panel {
-  
+  /* ---------------- key note ---------------- */
+  .rm-key{
+    margin-top:24px; display:flex; align-items:flex-start; gap:15px;
+    background:linear-gradient(135deg,var(--v2-navy),#16233c); color:#e2e8f0;
+    border-radius:16px; padding:19px 24px; box-shadow:var(--shadow-md);
+  }
+  .rm-key .ki{
+    flex:0 0 42px; height:42px; border-radius:12px; display:grid; place-items:center; font-size:20px;
+    background:rgba(255,140,0,.18); color:var(--v2-orange2);
+  }
+  .rm-key h3{ font-size:12px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; color:#ffcf94; margin:0 0 5px; }
+  .rm-key p{ margin:0; font-size:14.5px; line-height:1.6; }
 
-  
-  
-  position: relative;
-  overflow: visible;
-  box-shadow: var(--shadow);
-  margin-top: -6px;
-}
+  .rm-next{ margin-top:22px; display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+  .rm-next a{
+    display:flex; align-items:center; gap:12px; background:#fff; border:1px solid var(--v2-line);
+    border-radius:14px; padding:14px 18px; text-decoration:none; box-shadow:var(--shadow-sm);
+    transition:all .2s ease;
+  }
+  .rm-next a:hover{ transform:translateY(-3px); border-color:rgba(255,140,0,.4); box-shadow:var(--shadow-md); }
+  .rm-next .ni{
+    flex:0 0 38px; height:38px; border-radius:11px; display:grid; place-items:center; font-size:18px;
+    background:rgba(255,140,0,.12); color:var(--v2-orange-ink);
+  }
+  .rm-next .nt{ font-weight:700; font-size:14px; color:var(--v2-ink); }
+  .rm-next .nd{ font-size:12px; color:var(--v2-muted); margin-top:1px; }
+  .rm-next .na{ margin-left:auto; color:var(--v2-muted); font-size:13px; }
 
-/* place the image INSIDE the timeline panel (top-right) */
-.timeline-image {
-  position: absolute;
-  right: 36px;
-  top: 28px;
-  width: 300px;
-  height: 200px;
-  
-  border-radius: 12px;
-  padding: 10px;
-  box-shadow: 0 18px 46px rgba(2,18,20,0.20);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:14;
-  overflow:hidden;
-}
-.timeline-image img {
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  display:block;
-}
-
-/* ====== ROAD AREA / TIMELINE ====== */
-.road-area { position:relative; min-height:740px; }
-
-/* center rail */
-.timeline-rail {
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
-  width:8px;
-  top:44px;
-  bottom:44px;
-  border-radius:6px;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(2, 2, 2, 0.04));
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
-}
-
-/* nodes */
-.node {
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
-  width:64px;
-  height:64px;
-  border-radius:50%;
-  background:var(--card-bg);
-  color:var(--bg-1);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:800;
-  box-shadow: 0 10px 28px rgba(0,0,0,0.28);
-  border:6px solid rgba(255,255,255,0.08);
-  z-index:20;
-}
-.node.n-p1 { top: 48px; }
-.node.n-p2 { top: 240px; }
-.node.n-p3 { top: 432px; }
-.node.n-p4 { top: 624px; }
-
-/* milestone cards */
-.milestone {
-  position:absolute;
-  width:420px;
-  max-width: calc(50% - 120px);
-  background: var(--card-bg);
-  color: #072027;
-  border-radius: 12px;
-  padding: 18px;
-  box-shadow: 0 18px 46px rgba(2,18,20,0.24);
-  transition: transform .28s ease, box-shadow .28s ease, top .2s ease;
-  overflow:visible;
-  z-index:10;
-  -webkit-backface-visibility: hidden;
-}
-.milestone .tag {
-  display:inline-block;
-  background: linear-gradient(90deg,var(--accent), #38bfbf);
-  color:rgb(7, 7, 7);
-  padding:6px 10px;
-  border-radius:10px;
-  font-weight:700;
-  font-size:13px;
-  margin-bottom:10px;
-}
-.milestone .notch {
-  position:absolute;
-  width:12px;
-  height:12px;
-  transform: rotate(45deg);
-  background:var(--card-bg);
-  box-shadow: 0 6px 12px rgba(2,18,20,0.06);
-}
-.milestone.left { right: calc(50% + 48px); text-align:left; }
-.milestone.left .notch { right:-6px; top:22px; }
-.milestone.right { left: calc(50% + 48px); text-align:left; }
-.milestone.right .notch { left:-6px; top:22px; }
-.milestone:hover { transform: translateY(-6px); box-shadow: 0 28px 68px rgba(2,18,20,0.32); }
-
-/* tuned top offsets to avoid overlap */
-.m-p1.left  { top: 16px; z-index:12; }
-.m-p2.right { top: 208px; z-index:11; }
-.m-p3.left  { top: 400px; z-index:12; }
-.m-p4.right { top: 592px; z-index:11; }
-
-/* responsive */
-@media (max-width: 920px) {
-  .roadmap-hero { flex-direction:column-reverse; gap:12px; }
-  .timeline-image { position: relative; right: auto; top: auto; width:100%; height:160px; margin-bottom:8px; }
-  .road-area { min-height:920px; }
-  .milestone { position:absolute; width: calc(100% - 84px); left:42px; right:42px; max-width:none; }
-  .milestone.left, .milestone.right { left:42px; right:42px; }
-  .milestone .notch { display:none; }
-  .timeline-rail { left:36px; transform:none; width:6px; }
-  .node { left:36px; transform:none; }
-  .m-p1.left  { top: 24px; }
-  .m-p2.right { top: 240px; }
-  .m-p3.left  { top: 460px; }
-  .m-p4.right { top: 680px; }
-}
-
-/* key indicator */
-.road-key {
-  margin-top:20px;
-  display:flex;
-  gap:12px;
-  align-items:center;
-  background: rgba(255,255,255,0.04);
-  padding:12px 16px;
-  border-radius:10px;
-  color:var(--muted);
-  font-weight:700;
-}
-
-/* fade helper */
-.fade { opacity:0; transform: translateY(8px); transition: all .55s ease; }
-.fade.visible { opacity:1; transform:none; }
-
-/* ====== OVERRIDE: remove nav hover look for this page (local override) ======
-   base.html may define a hover gradient. we turn it off here so nav stays static.
-   ====== */
-.base-nav a:hover {
-  background: none !important;
-  color: inherit !important;
-  transform: none !important;
-  box-shadow: none !important;
-}
-
-/* accessibility focus */
-.milestone:focus { outline: 3px solid rgba(43,160,160,0.14); outline-offset: 4px; }
+  @media (max-width:1000px){
+    .rm-phases{ grid-template-columns:repeat(2,1fr); row-gap:20px; }
+    .rm-phases::before{ display:none; }
+  }
+  @media (max-width:860px){
+    .rm-hero{ grid-template-columns:1fr; gap:16px; }
+    .rm-art{ order:-1; }
+    .rm-art img{ max-width:200px; }
+  }
+  @media (max-width:620px){
+    .rm-phases{ grid-template-columns:1fr; row-gap:14px; }
+    .rm-phase{ flex-direction:row; align-items:flex-start; gap:12px; }
+    .rm-node{ margin-bottom:0; width:42px; height:42px; font-size:14px; border-width:3px; }
+    .rm-next{ grid-template-columns:1fr; }
+  }
 </style>
 {% endblock %}
 
 {% block content %}
-<main class="page-wrap">
-  <!-- HERO -->
-  <section class="roadmap-hero main-header-space">
-    <div class="intro">
-      <h1>Roadmap of Institutional Growth and Transformation</h1>
-      <p class="lead">A focused Short-Term Implementation Roadmap (2025–2027) — four phases that build governance, financial, academic, research, HR, networking, infrastructure, digital and entrepreneurship capacity within a single 0–2 year horizon.</p>
+<div class="rm-wrap">
+
+  <section class="rm-hero" data-no-reveal>
+    <div>
+      <span class="eyebrow">Implementation Roadmap · 2025–2027</span>
+      <h1>Roadmap of Institutional Growth and <span class="accent">Transformation</span></h1>
+      <p>A focused Short-Term Implementation Roadmap (2025–2027) — four phases that build governance,
+         financial, academic, research, HR, networking, infrastructure, digital and entrepreneurship
+         capacity within a single 0–2 year horizon.</p>
+      <div class="rm-chips">
+        <span class="rm-chip">{{ ui.icon('layers') }} 4 phases</span>
+        <span class="rm-chip">{{ ui.icon('clock') }} 0–2 year horizon</span>
+        <span class="rm-chip">{{ ui.icon('compass') }} 9 enablers</span>
+      </div>
     </div>
-    <!-- removed right-side hero visual to place image inside the timeline -->
-  </section>
-
-  <!-- TIMELINE PANEL -->
-  <section class="roadmap-panel" role="region" aria-label="Roadmap timeline">   
-    <!-- Put the image INSIDE the timeline (top-right). Use your static image name -->
-    <div class="timeline-image" aria-hidden="true">
-      <img src="{{ url_for('static', filename='images/rm1.png') }}" alt="Roadmap illustration">
-    </div>
-
-    <div class="road-area">
-      <div class="timeline-rail" aria-hidden="true"></div>
-
-      <div class="node n-p1" aria-hidden="true">Ph.1</div>
-      <div class="node n-p2" aria-hidden="true">Ph.2</div>
-      <div class="node n-p3" aria-hidden="true">Ph.3</div>
-      <div class="node n-p4" aria-hidden="true">Ph.4</div>
-
-      <article class="milestone left m-p1 fade" tabindex="0" aria-labelledby="mp1-title">
-        <div class="tag">2025 &middot; Phase 1</div>
-        <h3 id="mp1-title" style="margin:6px 0 8px;font-size:18px;font-weight:800;">Foundation &amp; Governance</h3>
-        <p style="margin:0;color:#234747;">Stand up governance and quality-assurance frameworks, finalise financial policies and budgets, and launch the Enabler I entrepreneurship policy and leadership structure across all nine Enablers.</p>
-        <div class="notch" aria-hidden="true"></div>
-      </article>
-
-      <article class="milestone right m-p2 fade" tabindex="0" aria-labelledby="mp2-title">
-        <div class="tag">2025–26 &middot; Phase 2</div>
-        <h3 id="mp2-title" style="margin:6px 0 8px;font-size:18px;font-weight:800;">Systems &amp; Capacity Building</h3>
-        <p style="margin:0;color:#234747;">Modernise digital and physical infrastructure, roll out faculty development and student-support programmes, and stand up structured IRG, research and pre-incubation pipelines.</p>
-        <div class="notch" aria-hidden="true"></div>
-      </article>
-
-      <article class="milestone left m-p3 fade" tabindex="0" aria-labelledby="mp3-title">
-        <div class="tag">2026 &middot; Phase 3</div>
-        <h3 id="mp3-title" style="margin:6px 0 8px;font-size:18px;font-weight:800;">Institution-Wide Rollout</h3>
-        <p style="margin:0;color:#234747;">Scale curriculum modernisation, networking and collaboration agreements, and entrepreneurship ideation programmes campus-wide, backed by live ERP, LMS and analytics dashboards.</p>
-        <div class="notch" aria-hidden="true"></div>
-      </article>
-
-      <article class="milestone right m-p4 fade" tabindex="0" aria-labelledby="mp4-title">
-        <div class="tag">2027 &middot; Phase 4</div>
-        <h3 id="mp4-title" style="margin:6px 0 8px;font-size:18px;font-weight:800;">Short-Term Consolidation</h3>
-        <p style="margin:0;color:#234747;">Consolidate every Enabler's short-term goals into standard operating practice — transparent governance, resilient finances, research momentum, and a self-sustaining startup pipeline.</p>
-        <div class="notch" aria-hidden="true"></div>
-      </article>
-
-    </div>
-
-    <div class="road-key" role="note" aria-label="Key indicator">
-      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" style="flex:0 0 36px">
-        <circle cx="12" cy="12" r="6" stroke="#2ba0a0" stroke-width="2"></circle>
-        <path d="M12 6v-2" stroke="#2ba0a0" stroke-width="2" stroke-linecap="round"></path>
-      </svg>
-      <div>All four phases sit within the 0–2 year short-term horizon that now governs every Enabler's roadmap.</div>
+    <div class="rm-art">
+      <img src="{{ url_for('static', filename='images/rm1.png') }}" alt="Roadmap illustration" width="270" height="270">
     </div>
   </section>
-</main>
 
-<script>
-// reveal fade elements when in view
-(function(){
-  const items = document.querySelectorAll('.fade');
-  function reveal() {
-    const trigger = window.innerHeight * 0.9;
-    items.forEach(it => {
-      const r = it.getBoundingClientRect();
-      if (r.top < trigger) it.classList.add('visible');
-    });
-  }
-  reveal();
-  window.addEventListener('scroll', reveal, { passive: true });
-  window.addEventListener('resize', reveal);
-})();
+  <section class="sec">
+    <div class="sec-head">
+      <div>
+        <h2>Four Phases, One <span class="accent">Horizon</span></h2>
+        <p>Every phase sits inside the 0–2 year short-term window that now governs the whole plan.</p>
+      </div>
+      <div class="rule" aria-hidden="true"></div>
+    </div>
 
-// reveal hero intro after DOM loads
-document.addEventListener('DOMContentLoaded', function(){
-  const intro = document.querySelector('.roadmap-hero .intro');
-  if (intro) requestAnimationFrame(()=> intro.classList.add('visible'));
-});
-</script>
+    <ol class="rm-phases">
+      <li class="rm-phase">
+        <div class="rm-node" aria-hidden="true">01</div>
+        <div class="rm-card">
+          <span class="rm-tag">2025 · Phase 1</span>
+          <h3>Foundation &amp; Governance</h3>
+          <p>Stand up governance and quality-assurance frameworks, finalise financial policies and budgets,
+             and launch the Enabler I entrepreneurship policy and leadership structure across all nine Enablers.</p>
+        </div>
+      </li>
+      <li class="rm-phase">
+        <div class="rm-node" aria-hidden="true">02</div>
+        <div class="rm-card">
+          <span class="rm-tag">2025–26 · Phase 2</span>
+          <h3>Systems &amp; Capacity Building</h3>
+          <p>Modernise digital and physical infrastructure, roll out faculty development and student-support
+             programmes, and stand up structured IRG, research and pre-incubation pipelines.</p>
+        </div>
+      </li>
+      <li class="rm-phase">
+        <div class="rm-node" aria-hidden="true">03</div>
+        <div class="rm-card">
+          <span class="rm-tag">2026 · Phase 3</span>
+          <h3>Institution-Wide Rollout</h3>
+          <p>Scale curriculum modernisation, networking and collaboration agreements, and entrepreneurship
+             ideation programmes campus-wide, backed by live ERP, LMS and analytics dashboards.</p>
+        </div>
+      </li>
+      <li class="rm-phase">
+        <div class="rm-node" aria-hidden="true">04</div>
+        <div class="rm-card">
+          <span class="rm-tag">2027 · Phase 4</span>
+          <h3>Short-Term Consolidation</h3>
+          <p>Consolidate every Enabler's short-term goals into standard operating practice — transparent
+             governance, resilient finances, research momentum, and a self-sustaining startup pipeline.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="rm-key" role="note">
+      <div class="ki" aria-hidden="true">{{ ui.icon('flag') }}</div>
+      <div>
+        <h3>Key Indicator</h3>
+        <p>All four phases sit within the 0–2 year short-term horizon that now governs every Enabler's roadmap.</p>
+      </div>
+    </div>
+
+    <div class="rm-next">
+      <a href="{{ url_for('overview') }}">
+        <div class="ni">{{ ui.icon('chart-simple') }}</div>
+        <div>
+          <div class="nt">Goal Overview</div>
+          <div class="nd">Short-term goals across all nine Enablers</div>
+        </div>
+        {{ ui.icon('arrow-right','na') }}
+      </a>
+      <a href="{{ url_for('enablers') }}">
+        <div class="ni">{{ ui.icon('users') }}</div>
+        <div>
+          <div class="nt">Enabler Committees</div>
+          <div class="nd">Who drives each phase of the roadmap</div>
+        </div>
+        {{ ui.icon('arrow-right','na') }}
+      </a>
+    </div>
+  </section>
+
+</div>
 {% endblock %}
