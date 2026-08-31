@@ -1,144 +1,127 @@
 {% extends "base.html" %}
 
-{% block title %}All Enablers — IDP{% endblock %}
+{% block title %}Committees — All Enablers (A–I) — IDP{% endblock %}
 
 {% block styles %}
 <style>
-  /* small page-specific tweaks */
-  .toggle-btn { cursor: pointer; }
-  .section-card { transition: all .18s ease; }
-  .section-card:hover { transform: translateY(-6px); box-shadow: 0 14px 40px rgba(15,23,42,0.08); }
+  :root{ --accent:#ff8c00; --accent2:#ffa733; --navy:#0b1220; --muted:#64748b; }
+
+  .ce-wrap { max-width:1200px; margin:20px auto 60px; padding:0 20px; }
+
+  .ce-header { text-align:center; margin-bottom:36px; }
+  .ce-header .eyebrow {
+    display:inline-flex; align-items:center; gap:8px; padding:7px 16px; border-radius:999px;
+    background:rgba(255,140,0,.10); border:1px solid rgba(255,140,0,.35); color:#9a5600;
+    font-weight:800; font-size:12px; letter-spacing:.12em; text-transform:uppercase; margin-bottom:16px;
+  }
+  .ce-header h1 {
+    font-size:34px; font-weight:900; margin:0 0 10px; line-height:1.2;
+    background: linear-gradient(135deg, #ff8c00, #07316a);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .ce-header p { color:var(--muted); font-size:15px; margin:0; max-width:640px; margin:0 auto; }
+
+  .ce-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+
+  .ce-card {
+    background:#fff; border-radius:18px; box-shadow:0 10px 28px rgba(15,23,42,.07);
+    border:1px solid rgba(11,18,32,.05); overflow:hidden; transition:all .22s ease;
+  }
+  .ce-card:hover { transform:translateY(-6px); box-shadow:0 20px 44px rgba(15,23,42,.12); }
+
+  .ce-card-head {
+    display:flex; align-items:center; gap:14px; padding:20px 22px; cursor:pointer; user-select:none;
+  }
+  .ce-ltr {
+    flex:0 0 46px; height:46px; border-radius:13px; display:grid; place-items:center;
+    font-family:'Manrope',sans-serif; font-weight:800; font-size:19px; color:#fff;
+    background:linear-gradient(135deg,var(--navy),#1e293b);
+  }
+  .ce-card.open .ce-ltr { background:linear-gradient(135deg,var(--accent),var(--accent2)); }
+  .ce-titles { flex:1; min-width:0; }
+  .ce-titles .name { font-weight:800; font-size:15px; color:#0f172a; line-height:1.3; }
+  .ce-titles .count { font-size:12px; color:var(--muted); margin-top:2px; }
+  .ce-chev { color:#94a3b8; transition:transform .25s ease; flex:0 0 auto; }
+  .ce-card.open .ce-chev { transform:rotate(180deg); color:var(--accent); }
+
+  .ce-card-body { max-height:0; overflow:hidden; transition:max-height .3s ease; }
+  .ce-card.open .ce-card-body { max-height:900px; }
+
+  .ce-card-body table { width:100%; border-collapse:collapse; }
+  .ce-card-body th {
+    text-align:left; padding:10px 22px; font-size:11px; letter-spacing:.05em; text-transform:uppercase;
+    background:rgba(11,18,32,.03); color:#64748b;
+  }
+  .ce-card-body td { padding:10px 22px; font-size:13.5px; color:#0f172a; border-top:1px solid rgba(11,18,32,.05); }
+
+  .role-badge { display:inline-block; padding:3px 11px; border-radius:999px; font-size:11px; font-weight:700; letter-spacing:.03em; }
+  .role-chair { background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; }
+  .role-convenor { background:var(--navy); color:#fff; }
+  .role-advisor { background:rgba(255,140,0,.12); color:#9a5600; border:1px solid rgba(255,140,0,.45); }
+  .role-member { background:rgba(11,18,32,.06); color:#334155; }
+
+  .ce-card-foot { padding:14px 22px 20px; }
+  .ce-card-foot a {
+    display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:#9a5600;
+    text-decoration:none;
+  }
+  .ce-card-foot a:hover { text-decoration:underline; }
+
+  @media (max-width:980px) { .ce-grid { grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:640px) { .ce-grid { grid-template-columns:1fr; } .ce-wrap { padding:0 16px; } .ce-header h1 { font-size:26px; } }
 </style>
 {% endblock %}
 
 {% block content %}
-<main class="p-6 max-w-7xl mx-auto space-y-6">
+<main class="ce-wrap">
 
-  <div class="flex items-center justify-between">
-    <div>
-      <h1 class="text-3xl font-bold text-blue-900 mb-2">Institutional Development Plan – Enablers (A to H)</h1>
-      <p class="text-sm text-gray-600">Click a section to expand the committee members and roles.</p>
-    </div>
-
-    
+  <div class="ce-header">
+    <span class="eyebrow">Institutional Development Plan</span>
+    <h1>Enabler Committees (A – I)</h1>
+    <p>Click a committee to view its members and roles. Nine strategic Enablers, each led by a dedicated leadership team.</p>
   </div>
 
-  <!-- Repeatable section component -->
-  {% macro enabler_section(id, title, rows) %}
-  <section class="bg-white shadow-md rounded-xl p-6 section-card" id="section-{{ id }}">
-    <div class="flex justify-between items-center toggle-btn" onclick="toggleContent('{{ id }}')">
-      <h3 class="text-2xl font-semibold text-blue-800">{{ title }}</h3>
-      <i id="chev-{{ id }}" class="fas fa-chevron-down"></i>
-    </div>
-    <div id="content-{{ id }}" class="hidden mt-4">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-100">
-          <tr>
-            <th class="text-left px-4 py-2">Name &amp; Designation</th>
-            <th class="text-left px-4 py-2">Position</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for r in rows %}
+  <div class="ce-grid">
+    {% for key in enabler_order %}
+    {% set meta = all_meta[key] %}
+    {% set rows = leadership[key] %}
+    <div class="ce-card" data-index="{{ loop.index }}">
+      <div class="ce-card-head" role="button" tabindex="0" aria-expanded="false">
+        <div class="ce-ltr">{{ key|upper }}</div>
+        <div class="ce-titles">
+          <div class="name">{{ meta.short_name }}</div>
+          <div class="count">{{ rows|length }} committee member{{ 's' if rows|length != 1 else '' }}</div>
+        </div>
+        <i class="fa-solid fa-chevron-down ce-chev"></i>
+      </div>
+      <div class="ce-card-body">
+        <table>
+          <thead><tr><th>Name &amp; Designation</th><th>Position</th></tr></thead>
+          <tbody>
+            {% for name, role in rows %}
             <tr>
-              <td class="px-4 py-2">{{ r[0] }}</td>
-              <td class="px-4 py-2">{{ r[1] }}</td>
+              <td>{{ name }}</td>
+              <td>
+                {% if role == 'Chairperson' %}<span class="role-badge role-chair">{{ role }}</span>
+                {% elif role == 'Convenor' %}<span class="role-badge role-convenor">{{ role }}</span>
+                {% elif role == 'Advisor' %}<span class="role-badge role-advisor">{{ role }}</span>
+                {% else %}<span class="role-badge role-member">{{ role }}</span>
+                {% endif %}
+              </td>
             </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class="ce-card-foot">
+          <a href="{{ url_for(endpoints[key]) }}">View Enabler {{ key|upper }} strategic goals <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
     </div>
-  </section>
-  {% endmacro %}
+    {% endfor %}
+  </div>
 
-  {# Provide data inline — you can also pass these via view context instead #}
-  {% set a_rows = [
-    ["Dr. Easwaran Iyer, Advisor, Chancellor’s Advisory Board", "Chairperson"],
-    ["Dr. Asha Rajiv, Director, IQAC", "Convenor"],
-    ["Mr. Ravindra Bhandary, Vice President, JGI", "Advisor"],
-    ["Dr. J. Letha, Pro Vice-Chancellor", "Member"],
-    ["Ms. Aparna Prasad, Director, Office of Communications and Human Resources", "Member"],
-    ["Mr. M.S. Parswanath, Director, Projects and Facilities, JGI", "Member"]
-] %}
-
-  {% set b_rows = [
-    ["Mr. Ravindra Bhandary, Vice President, JGI", "Chairperson"],
-    ["Mr. M.S. Santhosh, Joint Registrar", "Convenor"],
-    ["Dr. N V H Krishnan, Advisor, Chancellor’s Advisory Board", "Member"],
-    ["Ms. Aparna Prasad, Director, Office of Communications and Human Resources", "Member"],
-    ["Mr. M.S. Parswanath, Director, Projects and Facilities, JGI", "Member"]
-] %}
-
- {% set c_rows = [
-    ["Dr. Shradha Kanwar, Chief Academic Officer", "Chairperson"],
-    ["Dr. S Kiran, Deputy Dean, Academics", "Convenor"],
-    ["Dr. Sridhara Murthi K R, Advisor, Chancellor’s Advisory Board", "Member"],
-    ["Dr. Srividya Shivakumar, Director, School of Allied Healthcare and Sciences", "Member"],
-    ["Dr. Sagar Gulati, Director, School of CS and IT", "Member"],
-    ["Dr. Simmy Kurian, Deputy Director, CMS B-School, Off-Campus, Kochi", "Member"],
-    ["Dr. Neelima M, Deputy Director (In-Charge), School of Commerce", "Member"],
-    ["Dr. Beemkumar N, Professor, Mechanical Engineering, FET", "Member"]
-] %}
-
-
-  {% set d_rows = [
-    ["Dr. Varalakshmi K N, Director Research (Sciences), CRPAS, JAIN (Deemed-to-be University)", "Chairperson"],
-    ["Dr. Jitendra K Mishra, Vice Chancellor (In Charge) and Registrar", "Convenor"],
-    ["Dr. Manav Saxena, Head, CREI", "Member"],
-    ["Dr. Geetha Balakrishna, Director, Centre for Nano and Materials Science (CNMS)", "Member"],
-    ["Dr. Chetan Nag K S, Deputy Director, Centre for Urban Ecology, Bio-Diversity, Evolution and Climate Change (CUBEC)", "Member"],
-    ["Dr. Simmy Kurian, Deputy Director, CMS B-School, Off-Campus, Kochi", "Member"],
-    ["Dr. Mahavir Kurkuri, Associate Director and Professor, Centre for Research in Functional Materials (CRFM)", "Member"],
-    ["Dr. Beem Kumar, Professor, Mechanical Engineering, FET", "Member"]
-] %}
-
-
-  {% set e_rows = [
-    ["Ms. Aparna Prasad, Director, Office of Communications and Human Resources", "Chairperson"],
-    ["Ms. Roopa, Head, Human Resources", "Convenor"],
-    ["Dr. Asha Rajiv, Director of IQAC, School of Sciences", "Member"],
-    ["Dr. Shradha Kanwar, Chief Academic Officer", "Member"]
-] %}
-
-  {% set f_rows = [
-    ["Dr. Easwaran Iyer, Advisor, Chancellor’s Advisory Board", "Chairperson"],
-    ["Ms. Preeti Bhandary, Chief Manager, Placements and Corporate Relations", "Convenor"],
-    ["Mr. M.S. Santhosh, Joint Registrar", "Member"],
-    ["Dr. Deepak Sinha, Deputy Director, FET", "Member"],
-    ["Dr. Krishna Koppa, Deputy Director, CMS B-School", "Member"]
-] %}
-
-  {% set g_rows = [
-    ["Mr. Ravindra Bhandary, Vice President, JGI", "Chairperson"],
-    ["Dr. N V H Krishnan, Advisor, Chancellor’s Advisory Board", "Convenor"],
-    ["Mr. M.S. Parswanath, Director, Projects and Facilities, JGI", "Member"],
-    ["Mr. Vishal C, Director, Strategy and Development, JGI", "Member"],
-    ["Dr. Neelima M, Deputy Director (In-Charge), School of Commerce", "Member"],
-    ["Dr. J. Letha, Pro Vice-Chancellor", "Member"]
-] %}
-
-  {% set h_rows = [
-    ["Prof. N S Manjunath, Controller of Examinations", "Chairperson"],
-    ["Dr. S Kiran, Deputy Dean, Academics", "Convenor"],
-    ["Dr. Felix M. Philip, Deputy Director, School of Computer Science and IT, Off-Campus, Kochi", "Member"],
-    ["Dr. Sangeeta Devanathan, Deputy Dean, Academics", "Member"],
-    ["Dr. Sagar Gulati, Director, School of Computer Science and Information Technology", "Member"],
-    ["Mr. TSM Kumar, Director, IT", "Member"]
-] %}
-
-
-  {{ enabler_section('a', 'Enabler A: Governance Enablers', a_rows) }}
-{{ enabler_section('b', 'Enabler B: Financial Enablers and Funding Models (Resource Generation)', b_rows) }}
-{{ enabler_section('c', 'Enabler C: Academic Innovation and Excellence', c_rows) }}
-{{ enabler_section('d', 'Enabler D: Research and Intellectual Property', d_rows) }}
-{{ enabler_section('e', 'Enabler E: Human Resources and Supportive–Facilitative Enablers', e_rows) }}
-{{ enabler_section('f', 'Enabler F: Networking and Collaborations', f_rows) }}
-{{ enabler_section('g', 'Enabler G: Physical Enablers – Facilitative Enablers', g_rows) }}
-{{ enabler_section('h', 'Enabler H: Digital Transformation', h_rows) }}
-
-
-  <footer class="mt-6 text-sm text-gray-500">
-    <p>© {{ current_year if current_year is defined else '2025' }} IDP Committees Dashboard.</p>
+  <footer class="mt-10 text-sm text-gray-500 text-center">
+    <p>© {{ current_year if current_year is defined else '2026' }} IDP Committees Dashboard.</p>
   </footer>
 
 </main>
@@ -146,19 +129,15 @@
 
 {% block scripts %}
 <script>
-  function toggleContent(id) {
-    const content = document.getElementById(`content-${id}`);
-    const chev = document.getElementById(`chev-${id}`);
-    if (!content) return;
-    content.classList.toggle('hidden');
-    if (chev) {
-      chev.classList.toggle('fa-rotate-180');
+  document.querySelectorAll('.ce-card-head').forEach(head => {
+    function toggle() {
+      const card = head.closest('.ce-card');
+      const willOpen = !card.classList.contains('open');
+      card.classList.toggle('open', willOpen);
+      head.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
     }
-  }
-
-  // Optional: close all on load except A
-  document.addEventListener('DOMContentLoaded', () => {
-    // leave all collapsed by default (the template shows hidden class)
+    head.addEventListener('click', toggle);
+    head.addEventListener('keyup', (e) => { if (e.key === 'Enter' || e.key === ' ') toggle(); });
   });
 </script>
 {% endblock %}
