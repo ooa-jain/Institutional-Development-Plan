@@ -1,0 +1,169 @@
+{#
+  Authored inline-SVG icon set for the JAIN IDP site.
+  24x24 stroke icons, currentColor, no external dependency.
+
+  Usage:  {% import "_icons.html" as ui %}
+          {{ ui.sprite() }}            <- once, just inside <body>
+          {{ ui.icon('rocket') }}      <- anywhere
+  META['x']['icon'] values ("fa-rocket") are accepted; the prefix is stripped.
+#}
+
+{% macro icon(name, cls='') -%}
+<svg class="ic {{ cls }}" aria-hidden="true" focusable="false" width="1em" height="1em"><use href="#i-{{ name|replace('fa-','') }}"></use></svg>
+{%- endmacro %}
+
+{% macro sprite() -%}
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <defs>
+
+  <symbol id="i-house" viewBox="0 0 24 24">
+    <path d="M3.5 10.6 12 3.6l8.5 7v8.6a1.3 1.3 0 0 1-1.3 1.3h-4.4v-5.8H9.2v5.8H4.8a1.3 1.3 0 0 1-1.3-1.3z"/>
+  </symbol>
+
+  <symbol id="i-chart-simple" viewBox="0 0 24 24">
+    <path d="M3.5 20.5h17"/><path d="M6.5 20.5v-7"/><path d="M12 20.5V4.5"/><path d="M17.5 20.5v-11"/>
+  </symbol>
+
+  <symbol id="i-users" viewBox="0 0 24 24">
+    <circle cx="9.3" cy="7.6" r="3.4"/>
+    <path d="M2.8 20.4v-1.2a5 5 0 0 1 5-5h3a5 5 0 0 1 5 5v1.2"/>
+    <path d="M16.4 4.8a3.4 3.4 0 0 1 0 6.1"/>
+    <path d="M17.6 14.6a5 5 0 0 1 3.6 4.6v1.2"/>
+  </symbol>
+
+  <symbol id="i-people-group" viewBox="0 0 24 24">
+    <circle cx="7.4" cy="7.4" r="2.9"/><circle cx="16.6" cy="7.4" r="2.9"/>
+    <path d="M2.6 20.4v-1.5a4 4 0 0 1 4-4h1.6a4 4 0 0 1 4 4v1.5"/>
+    <path d="M12 20.4v-1.5a4 4 0 0 1 4-4h1.6a4 4 0 0 1 4 4v1.5"/>
+  </symbol>
+
+  <symbol id="i-user-tie" viewBox="0 0 24 24">
+    <circle cx="12" cy="6.8" r="3.6"/>
+    <path d="M5.5 20.8v-1.3a5.2 5.2 0 0 1 5.2-5.2h2.6a5.2 5.2 0 0 1 5.2 5.2v1.3"/>
+    <path d="M12 14.3v6"/>
+  </symbol>
+
+  <symbol id="i-route" viewBox="0 0 24 24">
+    <circle cx="6.2" cy="5.6" r="2.6"/><circle cx="17.8" cy="18.4" r="2.6"/>
+    <path d="M6.2 8.2v2.6a3 3 0 0 0 3 3h5.6a3 3 0 0 1 3 3v1"/>
+  </symbol>
+
+  <symbol id="i-compass" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8.8"/>
+    <path d="M15.9 8.1 13.7 13.7 8.1 15.9 10.3 10.3z"/>
+  </symbol>
+
+  <symbol id="i-arrow-right" viewBox="0 0 24 24">
+    <path d="M4 12h15.4"/><path d="M13.4 5.8 19.6 12l-6.2 6.2"/>
+  </symbol>
+
+  <symbol id="i-arrow-left" viewBox="0 0 24 24">
+    <path d="M20 12H4.6"/><path d="M10.6 5.8 4.4 12l6.2 6.2"/>
+  </symbol>
+
+  <symbol id="i-arrow-up" viewBox="0 0 24 24">
+    <path d="M12 20V4.6"/><path d="M5.8 10.8 12 4.6l6.2 6.2"/>
+  </symbol>
+
+  <symbol id="i-chevron-down" viewBox="0 0 24 24">
+    <path d="M6 9.4 12 15.4l6-6"/>
+  </symbol>
+
+  <symbol id="i-chevron-right" viewBox="0 0 24 24">
+    <path d="M9.4 5.8 15.4 12l-6 6.2"/>
+  </symbol>
+
+  <symbol id="i-search" viewBox="0 0 24 24">
+    <circle cx="10.6" cy="10.6" r="6.4"/><path d="M15.3 15.3 20.4 20.4"/>
+  </symbol>
+
+  <symbol id="i-circle-check" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8.8"/><path d="M8.1 12.2 10.9 15l5.2-5.6"/>
+  </symbol>
+
+  <symbol id="i-check" viewBox="0 0 24 24">
+    <path d="M4.6 12.6 9.4 17.4 19.4 6.8"/>
+  </symbol>
+
+  <symbol id="i-bullseye" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8.8"/><circle cx="12" cy="12" r="4.8"/>
+    <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+  </symbol>
+
+  <symbol id="i-circle-info" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8.8"/><path d="M12 11.2v5.2"/>
+    <circle cx="12" cy="7.9" r="1.05" fill="currentColor" stroke="none"/>
+  </symbol>
+
+  <symbol id="i-clock" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8.8"/><path d="M12 6.9V12l3.4 2"/>
+  </symbol>
+
+  <symbol id="i-landmark" viewBox="0 0 24 24">
+    <path d="M2.8 20.8h18.4"/><path d="M4.2 10.2h15.6"/><path d="M12 3.4 20.6 8H3.4z"/>
+    <path d="M6.6 10.2v7.6"/><path d="M10.2 10.2v7.6"/><path d="M13.8 10.2v7.6"/><path d="M17.4 10.2v7.6"/>
+  </symbol>
+
+  <symbol id="i-building-columns" viewBox="0 0 24 24">
+    <path d="M2.8 20.8h18.4"/>
+    <path d="M5.2 20.8V5.6a1.2 1.2 0 0 1 1.2-1.2h7a1.2 1.2 0 0 1 1.2 1.2v15.2"/>
+    <path d="M14.6 20.8V10h3.4a1.2 1.2 0 0 1 1.2 1.2v9.6"/>
+    <path d="M8 8.3h1.6"/><path d="M8 12.1h1.6"/><path d="M8 15.9h1.6"/>
+    <path d="M11.4 8.3H13"/><path d="M11.4 12.1H13"/><path d="M11.4 15.9H13"/>
+  </symbol>
+
+  <symbol id="i-graduation-cap" viewBox="0 0 24 24">
+    <path d="M2.6 9.2 12 5.1l9.4 4.1L12 13.4z"/>
+    <path d="M6.6 11.1v4.6c0 1.6 2.4 2.9 5.4 2.9s5.4-1.3 5.4-2.9v-4.6"/>
+    <path d="M21.4 9.2v5.4"/>
+  </symbol>
+
+  <symbol id="i-flask" viewBox="0 0 24 24">
+    <path d="M9.4 3.4h5.2"/>
+    <path d="M10.6 3.4v6.2L5.6 18a2.1 2.1 0 0 0 1.8 3.1h9.2a2.1 2.1 0 0 0 1.8-3.1l-5-8.4V3.4"/>
+    <path d="M7.9 14.4h8.2"/>
+  </symbol>
+
+  <symbol id="i-sack-dollar" viewBox="0 0 24 24">
+    <path d="M9.2 3.2h5.6l-1.7 3.4h-2.2z"/>
+    <path d="M10.9 6.6C7.1 8.6 4.9 12 4.9 15.2A5.6 5.6 0 0 0 10.5 20.8h3A5.6 5.6 0 0 0 19.1 15.2c0-3.2-2.2-6.6-6-8.6"/>
+    <path d="M12 10.6v7.2"/>
+    <path d="M13.8 12.2a1.9 1.9 0 1 0-1.8 2.6 1.9 1.9 0 1 1-1.8 2.6"/>
+  </symbol>
+
+  <symbol id="i-diagram-project" viewBox="0 0 24 24">
+    <circle cx="5.8" cy="6.2" r="2.6"/><circle cx="18.2" cy="6.2" r="2.6"/><circle cx="12" cy="18.4" r="2.6"/>
+    <path d="M8.4 6.2h7.2"/><path d="M6.9 8.6l4 7.6"/><path d="M17.1 8.6l-4 7.6"/>
+  </symbol>
+
+  <symbol id="i-network-wired" viewBox="0 0 24 24">
+    <rect x="2.8" y="2.8" width="6.4" height="4.6" rx="1.2"/>
+    <rect x="14.8" y="2.8" width="6.4" height="4.6" rx="1.2"/>
+    <rect x="8.8" y="16.6" width="6.4" height="4.6" rx="1.2"/>
+    <path d="M6 7.4v3.4h12V7.4"/><path d="M12 10.8v5.8"/>
+  </symbol>
+
+  <symbol id="i-rocket" viewBox="0 0 24 24">
+    <path d="M12 2.6c2.9 2.4 4.6 5.9 4.6 9.5l-1.7 3.1H9.1L7.4 12.1c0-3.6 1.7-7.1 4.6-9.5z"/>
+    <circle cx="12" cy="9.9" r="1.9"/>
+    <path d="M9.1 15.2v2.3c0 1 .5 2 1.4 2.5l1.5.9 1.5-.9c.9-.5 1.4-1.5 1.4-2.5v-2.3"/>
+    <path d="M7.6 12.3 5 14.6v3.2l2.7-1.8"/>
+    <path d="M16.4 12.3 19 14.6v3.2l-2.7-1.8"/>
+  </symbol>
+
+  <symbol id="i-layers" viewBox="0 0 24 24">
+    <path d="M12 3.2 21 8l-9 4.8L3 8z"/><path d="M3 12.4 12 17.2 21 12.4"/><path d="M3 16.6 12 21.4 21 16.6"/>
+  </symbol>
+
+  <symbol id="i-expand" viewBox="0 0 24 24">
+    <path d="M8.4 3.6H4.6a1 1 0 0 0-1 1v3.8"/><path d="M15.6 3.6h3.8a1 1 0 0 1 1 1v3.8"/>
+    <path d="M8.4 20.4H4.6a1 1 0 0 1-1-1v-3.8"/><path d="M15.6 20.4h3.8a1 1 0 0 0 1-1v-3.8"/>
+  </symbol>
+
+  <symbol id="i-flag" viewBox="0 0 24 24">
+    <path d="M5.4 21V3.6"/><path d="M5.4 4.4h11.4l-2.2 4 2.2 4H5.4z"/>
+  </symbol>
+
+  </defs>
+</svg>
+{%- endmacro %}

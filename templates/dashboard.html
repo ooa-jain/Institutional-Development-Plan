@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "_icons.html" as ui %}
 
 {% block title %}Institutional Development Plan — JAIN (Deemed-to-be University){% endblock %}
 
@@ -6,26 +7,26 @@
 <style>
   /* ============================= HERO ============================= */
   .home-hero{
-    margin-top:22px;
+    margin-top:18px;
     background:linear-gradient(135deg,#ffffff 0%,#fbfdff 55%,#fff6ea 100%);
     border:1px solid var(--v2-line); border-radius:22px;
     box-shadow:var(--shadow-lg); overflow:hidden;
   }
   .hh-top{
-    display:grid; grid-template-columns:1.08fr .92fr; gap:26px; align-items:center;
-    padding:30px clamp(20px,3vw,36px) 24px;
+    display:grid; grid-template-columns:1.2fr .8fr; gap:20px; align-items:center;
+    padding:26px clamp(20px,3vw,34px) 22px;
   }
   .hh-copy h1{
-    font-size:clamp(28px,3.6vw,42px); font-weight:800; line-height:1.1; margin:14px 0 12px; color:var(--v2-ink);
+    font-size:clamp(27px,3.2vw,38px); font-weight:800; line-height:1.14; margin:13px 0 11px; color:var(--v2-ink);
   }
   .hh-copy h1 .accent{
     background:linear-gradient(120deg,var(--v2-orange),#e06f00);
     -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
   }
-  .hh-copy .lead{ color:var(--v2-muted); font-size:15px; line-height:1.65; margin:0 0 18px; max-width:56ch; }
+  .hh-copy .lead{ color:var(--v2-muted); font-size:14.5px; line-height:1.6; margin:0 0 16px; max-width:60ch; }
   .hh-actions{ display:flex; gap:10px; flex-wrap:wrap; }
   .hh-art{ display:flex; align-items:center; justify-content:center; position:relative; }
-  .hh-art img{ width:100%; max-width:330px; height:auto; display:block; }
+  .hh-art img{ width:100%; max-width:300px; height:auto; display:block; }
   .hh-art::before{
     content:""; position:absolute; width:74%; aspect-ratio:1/1; border-radius:50%;
     background:radial-gradient(circle,rgba(255,140,0,.16),transparent 68%); z-index:0;
@@ -36,18 +37,18 @@
     display:grid; grid-template-columns:repeat(4,1fr);
     border-top:1px solid var(--v2-line); background:rgba(11,18,32,.02);
   }
-  .hh-stat{ padding:16px 14px; text-align:center; border-left:1px solid var(--v2-line); }
+  .hh-stat{ padding:13px 14px; text-align:center; border-left:1px solid var(--v2-line); }
   .hh-stat:first-child{ border-left:none; }
   .hh-stat .num{ font-family:'Manrope',sans-serif; font-weight:800; font-size:clamp(24px,2.8vw,30px); color:var(--v2-ink); line-height:1.1; }
   .hh-stat .num span{ color:var(--v2-orange); }
   .hh-stat .lbl{ margin-top:2px; font-size:11px; font-weight:700; color:var(--v2-muted); letter-spacing:.09em; text-transform:uppercase; }
 
   /* ========================= ENABLER GRID ========================= */
-  .en-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .en-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
   .en-card{
-    display:flex; flex-direction:column; gap:9px;
+    display:flex; flex-direction:column; gap:8px;
     background:#fff; border:1px solid var(--v2-line); border-radius:var(--r-lg);
-    padding:16px 17px 14px; text-decoration:none; box-shadow:var(--shadow-sm);
+    padding:14px 16px 12px; text-decoration:none; box-shadow:var(--shadow-sm);
     transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
     position:relative; overflow:hidden;
   }
@@ -69,12 +70,13 @@
   }
   .en-foot b{ color:var(--v2-ink); font-family:'Manrope',sans-serif; }
   .en-foot .go{ margin-left:auto; color:var(--v2-orange); font-size:12px; }
-  .en-card .ico{ margin-left:auto; color:rgba(11,18,32,.16); font-size:17px; }
-  .en-card:hover .ico{ color:rgba(255,140,0,.6); }
+  .en-card .ico{ margin-left:auto; color:rgba(11,18,32,.3); font-size:19px; }
+  .en-card:hover .ico{ color:var(--v2-orange); }
 
   /* ==================== COMMITTEE + NEXT STEPS ==================== */
-  .home-band{ display:grid; grid-template-columns:1.25fr .75fr; gap:16px; align-items:start; }
+  .home-band{ display:grid; grid-template-columns:1.28fr .72fr; gap:16px; align-items:stretch; }
   .pcc-card{
+    display:flex; flex-direction:column;
     background:#fff; border:1px solid var(--v2-line); border-radius:var(--r-lg);
     box-shadow:var(--shadow-sm); overflow:hidden;
   }
@@ -82,12 +84,12 @@
     display:flex; align-items:center; gap:12px; padding:16px 20px;
     background:linear-gradient(135deg,var(--v2-navy),#16233c); color:#fff;
   }
-  .pcc-head i{ color:var(--v2-orange2); font-size:16px; }
+  .pcc-head .ic{ color:var(--v2-orange2); font-size:19px; }
   .pcc-head h2{ font-size:16.5px; font-weight:800; color:#fff; }
   .pcc-head .sub{ font-size:11.5px; color:#9fb0c6; margin-top:1px; }
-  .pcc-list{ display:grid; grid-template-columns:1fr 1fr; }
+  .pcc-list{ display:grid; grid-template-columns:1fr 1fr; flex:1; }
   .pcc-item{
-    display:flex; align-items:center; gap:12px; padding:14px 18px;
+    display:flex; align-items:center; gap:12px; padding:13px 18px;
     border-top:1px solid var(--v2-line); border-left:1px solid var(--v2-line); min-width:0;
   }
   .pcc-item:nth-child(odd){ border-left:none; }
@@ -110,7 +112,7 @@
   }
   .next-card:hover{ transform:translateY(-3px); border-color:rgba(255,140,0,.45); box-shadow:var(--shadow-md); }
   .next-card .ni{
-    flex:0 0 40px; height:40px; border-radius:12px; display:grid; place-items:center; font-size:16px;
+    flex:0 0 40px; height:40px; border-radius:12px; display:grid; place-items:center; font-size:19px;
     background:rgba(255,140,0,.12); color:var(--v2-orange-ink);
   }
   .next-card:hover .ni{ background:linear-gradient(135deg,var(--v2-orange),var(--v2-orange2)); color:#fff; }
@@ -119,11 +121,11 @@
   .next-card .na{ margin-left:auto; color:var(--v2-muted); font-size:12px; }
 
   .home-note{
-    margin-top:14px; display:flex; align-items:flex-start; gap:11px;
+    margin-top:auto; display:flex; align-items:flex-start; gap:11px;
     background:rgba(255,140,0,.08); border:1px solid rgba(255,140,0,.3);
     border-radius:var(--r-md); padding:13px 16px; font-size:13px; color:#6b4a1c; line-height:1.55;
   }
-  .home-note i{ color:var(--v2-orange); margin-top:2px; }
+  .home-note .ic{ color:var(--v2-orange); font-size:16px; margin-top:2px; }
 
   /* ========================= RESPONSIVE ========================= */
   @media (max-width:1000px){
@@ -163,9 +165,9 @@
           academic innovation, and digital transformation aligned with NEP 2020.
         </p>
         <div class="hh-actions">
-          <a class="btn btn-primary" href="#enablers"><i class="fa-solid fa-compass"></i> Explore the Enablers</a>
-          <a class="btn btn-ghost" href="{{ url_for('overview') }}"><i class="fa-solid fa-chart-simple"></i> Goal Overview</a>
-          <a class="btn btn-ghost" href="{{ url_for('Roadmap') }}"><i class="fa-solid fa-route"></i> Roadmap</a>
+          <a class="btn btn-primary" href="#enablers">{{ ui.icon('compass') }} Explore the Enablers</a>
+          <a class="btn btn-ghost" href="{{ url_for('overview') }}">{{ ui.icon('chart-simple') }} Goal Overview</a>
+          <a class="btn btn-ghost" href="{{ url_for('Roadmap') }}">{{ ui.icon('route') }} Roadmap</a>
         </div>
       </div>
       <div class="hh-art">
@@ -190,7 +192,7 @@
         <p>Every enabler carries its own leadership committee and a focused set of short-term goals on a 0–2 year horizon.</p>
       </div>
       <div class="rule" aria-hidden="true"></div>
-      <a class="btn btn-ghost" href="{{ url_for('overview') }}">Compare all <i class="fa-solid fa-arrow-right"></i></a>
+      <a class="btn btn-ghost" href="{{ url_for('overview') }}">Compare all {{ ui.icon('arrow-right') }}</a>
     </div>
 
     <div class="en-grid">
@@ -202,14 +204,14 @@
             <div class="nm">{{ s.meta.short_name }}</div>
             <div class="sub">Enabler {{ s.meta.key|upper }}</div>
           </div>
-          <i class="fa-solid {{ s.meta.icon }} ico" aria-hidden="true"></i>
+          {{ ui.icon(s.meta.icon, 'ico') }}
         </div>
         <p class="blurb">{{ s.meta.blurb }}</p>
         <div class="en-foot">
           <span><b>{{ s.n_focus }}</b> focus areas</span>
           <span aria-hidden="true">·</span>
           <span><b>{{ s.n_goals }}</b> goals</span>
-          <i class="fa-solid fa-arrow-right go" aria-hidden="true"></i>
+          {{ ui.icon('arrow-right','go') }}
         </div>
       </a>
       {% endfor %}
@@ -222,7 +224,7 @@
 
       <div class="pcc-card">
         <div class="pcc-head">
-          <i class="fa-solid fa-user-tie" aria-hidden="true"></i>
+          {{ ui.icon('user-tie') }}
           <div>
             <h2>Principal Coordination Committee</h2>
             <div class="sub">Apex body steering the Institutional Development Plan</div>
@@ -244,31 +246,31 @@
 
       <div class="next-stack">
         <a class="next-card" href="{{ url_for('enablers') }}">
-          <div class="ni"><i class="fa-solid fa-users" aria-hidden="true"></i></div>
+          <div class="ni">{{ ui.icon('users') }}</div>
           <div>
             <div class="nt">Enabler Committees</div>
             <div class="nd">Leadership rosters for all nine enablers</div>
           </div>
-          <i class="fa-solid fa-arrow-right na" aria-hidden="true"></i>
+          {{ ui.icon('arrow-right','na') }}
         </a>
         <a class="next-card" href="{{ url_for('overview') }}">
-          <div class="ni"><i class="fa-solid fa-chart-simple" aria-hidden="true"></i></div>
+          <div class="ni">{{ ui.icon('chart-simple') }}</div>
           <div>
             <div class="nt">Goal Overview</div>
             <div class="nd">{{ total_goals }} short-term goals, side by side</div>
           </div>
-          <i class="fa-solid fa-arrow-right na" aria-hidden="true"></i>
+          {{ ui.icon('arrow-right','na') }}
         </a>
         <a class="next-card" href="{{ url_for('Roadmap') }}">
-          <div class="ni"><i class="fa-solid fa-route" aria-hidden="true"></i></div>
+          <div class="ni">{{ ui.icon('route') }}</div>
           <div>
             <div class="nt">Implementation Roadmap</div>
             <div class="nd">Four phases across the 0–2 year horizon</div>
           </div>
-          <i class="fa-solid fa-arrow-right na" aria-hidden="true"></i>
+          {{ ui.icon('arrow-right','na') }}
         </a>
         <div class="home-note">
-          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+          {{ ui.icon('circle-info') }}
           <span>The plan now tracks a single short-term horizon — mid-term and long-term milestones have been retired in favour of one focused 0–2 year strategy.</span>
         </div>
       </div>

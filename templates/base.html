@@ -1,14 +1,10 @@
-<!doctype html>
+{% import "_icons.html" as ui %}<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>{% block title %}JAIN — IDP{% endblock %}</title>
 
-  <!-- Tailwind CDN -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -42,6 +38,11 @@ h1,h2,h3,h4,.title,.section-title,.panel-title{
   font-family:'Manrope','Inter',system-ui,sans-serif; letter-spacing:-.02em; margin:0;
 }
 img{ max-width:100%; }
+.ic{
+  display:inline-block; width:1em; height:1em; flex:0 0 auto;
+  fill:none; stroke:currentColor; stroke-width:1.8;
+  stroke-linecap:round; stroke-linejoin:round; vertical-align:-.14em;
+}
 a{ color:inherit; }
 
 /* ---------- ambient background ---------- */
@@ -153,7 +154,7 @@ body::after{
 .wrap{ max-width:1240px; margin:0 auto; padding:0 clamp(16px,3vw,26px); }
 .wrap-md{ max-width:1080px; margin:0 auto; padding:0 clamp(16px,3vw,26px); }
 main{ display:block; }
-.sec{ margin-top:38px; }
+.sec{ margin-top:32px; }
 .sec-tight{ margin-top:24px; }
 
 .eyebrow, .v2-eyebrow{
@@ -167,7 +168,7 @@ main{ display:block; }
 }
 .eyebrow.on-dark{ background:rgba(255,140,0,.18); border-color:rgba(255,140,0,.42); color:#ffcf94; }
 
-.sec-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:18px; margin-bottom:16px; flex-wrap:wrap; }
+.sec-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:18px; margin-bottom:14px; flex-wrap:wrap; }
 .sec-head h2{ font-size:clamp(21px,2.4vw,26px); font-weight:800; color:var(--v2-ink); }
 .sec-head h2 .accent{ color:var(--v2-orange); }
 .sec-head p{ margin:4px 0 0; color:var(--v2-muted); font-size:14px; max-width:62ch; }
@@ -237,10 +238,10 @@ td,th{ border-color:var(--v2-line) !important; }
 #v2-top:hover{ transform:translateY(-3px); }
 
 /* ---------- footer ---------- */
-.v2-footer{ margin-top:56px; background:var(--v2-navy); color:#cbd5e1; position:relative; }
+.v2-footer{ margin-top:44px; background:var(--v2-navy); color:#cbd5e1; position:relative; }
 .v2-footer::before{ content:""; position:absolute; top:0; left:0; right:0; height:3px;
   background:linear-gradient(90deg,var(--v2-orange),var(--v2-orange2),var(--v2-orange)); }
-.v2-footer .wrap{ padding-top:34px; padding-bottom:18px; display:grid;
+.v2-footer .wrap{ padding-top:30px; padding-bottom:16px; display:grid;
   grid-template-columns:1.5fr 1fr 1.5fr; gap:32px; }
 .v2-footer h4{ color:#fff; font-family:'Manrope',sans-serif; font-size:12px; letter-spacing:.14em;
   text-transform:uppercase; margin:0 0 12px; }
@@ -271,6 +272,7 @@ td,th{ border-color:var(--v2-line) !important; }
   {% block styles %}{% endblock %}
 </head>
 <body>
+{{ ui.sprite() }}
 
   <header class="topbar" id="topbar" role="banner">
     <a class="base-logo" href="{{ url_for('dashboard') }}" aria-label="JAIN IDP home">
@@ -283,7 +285,7 @@ td,th{ border-color:var(--v2-line) !important; }
       <a href="{{ url_for('overview') }}"{% if active_nav == 'overview' %} class="active" aria-current="page"{% endif %}>Overview</a>
       <div class="nav-drop" id="navDrop">
         <button type="button" class="nav-trigger" id="navTrigger" aria-expanded="false" aria-controls="navMenu">
-          Enablers <i class="fa-solid fa-chevron-down caret" aria-hidden="true"></i>
+          Enablers {{ ui.icon('chevron-down', 'caret') }}
         </button>
         <div class="nav-menu" id="navMenu" role="menu" aria-label="Enablers A to I">
           <a href="{{ url_for('enablersA') }}" role="menuitem"><b>A</b> Governance</a>
@@ -308,10 +310,10 @@ td,th{ border-color:var(--v2-line) !important; }
 
   <div id="mobileNav" class="mobile-nav-overlay" aria-hidden="true">
     <div class="mobile-nav-content" role="dialog" aria-modal="true" aria-label="Site navigation">
-      <a href="{{ url_for('dashboard') }}"><b><i class="fa-solid fa-house"></i></b> Home</a>
-      <a href="{{ url_for('overview') }}"><b><i class="fa-solid fa-chart-simple"></i></b> Overview</a>
-      <a href="{{ url_for('enablers') }}"><b><i class="fa-solid fa-users"></i></b> Committees</a>
-      <a href="{{ url_for('Roadmap') }}"><b><i class="fa-solid fa-route"></i></b> Roadmap</a>
+      <a href="{{ url_for('dashboard') }}"><b>{{ ui.icon('house') }}</b> Home</a>
+      <a href="{{ url_for('overview') }}"><b>{{ ui.icon('chart-simple') }}</b> Overview</a>
+      <a href="{{ url_for('enablers') }}"><b>{{ ui.icon('users') }}</b> Committees</a>
+      <a href="{{ url_for('Roadmap') }}"><b>{{ ui.icon('route') }}</b> Roadmap</a>
       <h5>Nine Enablers</h5>
       <div class="mnav-grid">
         <a href="{{ url_for('enablersA') }}"><b>A</b> Governance</a>
@@ -365,7 +367,7 @@ td,th{ border-color:var(--v2-line) !important; }
 </footer>
 
 <div id="v2-progress"></div>
-<button id="v2-top" aria-label="Back to top">↑</button>
+<button id="v2-top" aria-label="Back to top">{{ ui.icon('arrow-up') }}</button>
 
 <script id="uiv2js">
 (function(){
