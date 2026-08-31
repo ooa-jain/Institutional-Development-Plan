@@ -3,6 +3,8 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import os
 
+import idp_data
+
 app = Flask(__name__, template_folder="templates")
 CORS(app)
 
@@ -22,35 +24,71 @@ def dashboard():
 def view_section(section_id):
     return render_template("dashboard.html", sections=[])
 
+def _render_enabler(key):
+    return render_template("enabler_page.html", **idp_data.get_enabler_context(key))
+
 @app.route("/enablers")
-def enablers(): return render_template("enablers.html")
+def enablers():
+    return render_template(
+        "enablers.html",
+        leadership=idp_data.LEADERSHIP,
+        all_meta=idp_data.META,
+        enabler_order=idp_data.ENABLER_ORDER,
+        endpoints=idp_data.ENDPOINTS,
+    )
 
 @app.route("/enablersA")
-def enablersA(): return render_template("enablersA.html")
+def enablersA(): return _render_enabler("a")
 
 @app.route("/enablersb")
-def enablersb(): return render_template("enablersb.html")
+def enablersb(): return _render_enabler("b")
 
 @app.route("/enablersc")
-def enablersc(): return render_template("enablersc.html")
+def enablersc(): return _render_enabler("c")
 
 @app.route("/enablersd")
-def enablersd(): return render_template("enablersd.html")
+def enablersd(): return _render_enabler("d")
 
 @app.route("/enablerse")
-def enablerse(): return render_template("enablerse.html")
+def enablerse(): return _render_enabler("e")
 
 @app.route("/enablersf")
-def enablersf(): return render_template("enablersf.html")
+def enablersf(): return _render_enabler("f")
 
 @app.route("/enablersg")
-def enablersg(): return render_template("enablersg.html")
+def enablersg(): return _render_enabler("g")
 
 @app.route("/enablersh")
-def enablersh(): return render_template("enablersh.html")
+def enablersh(): return _render_enabler("h")
+
+@app.route("/enablersi")
+def enablersi(): return _render_enabler("i")
 
 @app.route("/overview")
-def overview(): return render_template("overview.html")
+def overview():
+    summaries = []
+    total_goals = 0
+    total_focus = 0
+    for key in idp_data.ENABLER_ORDER:
+        goals = idp_data.GOALS[key]
+        n_focus = len(goals)
+        n_goals = sum(len(v) for v in goals.values())
+        total_focus += n_focus
+        total_goals += n_goals
+        summaries.append({
+            "meta": idp_data.META[key],
+            "endpoint": idp_data.ENDPOINTS[key],
+            "n_focus": n_focus,
+            "n_goals": n_goals,
+            "sample_focus": list(goals.keys())[:3],
+        })
+    return render_template(
+        "overview.html",
+        summaries=summaries,
+        total_goals=total_goals,
+        total_focus=total_focus,
+        total_enablers=len(idp_data.ENABLER_ORDER),
+    )
 
 @app.route("/index")
 def index(): return render_template("index.html")
