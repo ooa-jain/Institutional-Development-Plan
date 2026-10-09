@@ -107,7 +107,7 @@ META = {
     "a": {
         "key": "a",
         "title": "Enabler A – Governance Enabler",
-        "short_name": "Governance",
+        "short_name": "Governance Enabler",
         "vision": "A transparent, accountable, and digitally empowered governance structure that ensures strategic leadership, regulatory compliance, and participatory decision-making across the institution.",
         "outcome": "Institutional readiness, transparency, inclusivity, and participatory governance.",
         "image": "ea.png",
@@ -116,7 +116,7 @@ META = {
     "b": {
         "key": "b",
         "title": "Enabler B – Financial Strategy and Funding Models Enabler",
-        "short_name": "Financial Sustainability",
+        "short_name": "Financial Strategy and Funding Models Enabler",
         "vision": "A financially resilient and diversified funding ecosystem that ensures sustained institutional growth, surplus generation, and strategic reinvestment in academic and research excellence.",
         "outcome": "Diversified revenue streams, financial resilience, and sustainable reinvestment capacity.",
         "image": "eb.png",
@@ -125,7 +125,7 @@ META = {
     "c": {
         "key": "c",
         "title": "Enabler C – Academic Innovation and Excellence Enabler",
-        "short_name": "Academic Innovation",
+        "short_name": "Academic Innovation and Excellence Enabler",
         "vision": "A future-ready academic ecosystem that ensures flexible, technology-integrated learning, enhanced skill development, strong industry alignment, and measurable student success in national and global opportunities.",
         "outcome": "Future-ready graduates, stronger industry alignment, and measurable learning outcomes.",
         "image": "ec.png",
@@ -134,7 +134,7 @@ META = {
     "d": {
         "key": "d",
         "title": "Enabler D – Research and Intellectual Property Enabler",
-        "short_name": "Research & IP",
+        "short_name": "Research and Intellectual Property Enabler",
         "vision": "A robust research and innovation culture that drives high-impact publications, increased IP generation, strong industry collaboration, and multidisciplinary solutions aligned with national and global priorities.",
         "outcome": "Enhanced research capacity, international collaborations, and impactful innovation outcomes.",
         "image": "ed.png",
@@ -143,7 +143,7 @@ META = {
     "e": {
         "key": "e",
         "title": "Enabler E – Human Resources and Supportive–Facilitative Enabler",
-        "short_name": "Human Resources",
+        "short_name": "Human Resources and Supportive–Facilitative Enabler",
         "vision": "A people-first ecosystem that empowers faculty, staff, and students through inclusive support systems, continuous skill development, digital enablement, and holistic well-being for sustained institutional excellence.",
         "outcome": "Improved student success, staff capacity, and an inclusive campus culture aligned with global opportunities.",
         "image": "ee.png",
@@ -152,7 +152,7 @@ META = {
     "f": {
         "key": "f",
         "title": "Enabler F – Networking and Collaborations Enabler",
-        "short_name": "Networking & Collaboration",
+        "short_name": "Networking and Collaborations Enabler",
         "vision": "A globally connected collaboration ecosystem that strengthens academic excellence, drives innovation with industry and communities, and expands opportunities for students and faculty through robust alumni, national, and international partnerships.",
         "outcome": "Enhanced external engagement, stronger alumni networks, and impactful community partnerships.",
         "image": "ef.png",
@@ -161,7 +161,7 @@ META = {
     "g": {
         "key": "g",
         "title": "Enabler G – Physical Enabler – Facilitative Enabler",
-        "short_name": "Physical Infrastructure",
+        "short_name": "Physical Enabler – Facilitative Enabler",
         "vision": "A sustainable, technology-enabled and future-ready campus infrastructure that enhances learning, research, safety, and student living while supporting institutional growth and global competitiveness.",
         "outcome": "Improved campus resilience, safer student living, and digitally-enabled learning environments.",
         "image": "eg.png",
@@ -170,7 +170,7 @@ META = {
     "h": {
         "key": "h",
         "title": "Enabler H – Digital Transformation Enabler",
-        "short_name": "Digital Transformation",
+        "short_name": "Digital Transformation Enabler",
         "vision": "A unified, secure and AI-enabled digital ecosystem that enhances learning experiences, streamlines governance, drives data-based decisions, and ensures seamless connectivity across academic and administrative functions.",
         "outcome": "Efficient administration, improved learning outcomes, and resilient digital operations.",
         "image": "eh.png",
@@ -179,7 +179,7 @@ META = {
     "i": {
         "key": "i",
         "title": "Enabler I – Entrepreneurship Enabler",
-        "short_name": "Entrepreneurship",
+        "short_name": "Entrepreneurship Enabler",
         "vision": "A thriving entrepreneurial ecosystem that nurtures student and faculty innovation, accelerates venture creation, and embeds startup thinking across academic, research, and institutional pathways.",
         "outcome": "A self-sustaining startup pipeline, stronger industry-academia venture linkages, and an institution-wide entrepreneurial culture.",
         "image": None,
